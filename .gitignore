@@ -1,0 +1,22 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Output directories & caches
+runs/
+prelabel_output/
+tests/sample_images/
+tests/sample_output/
+.pytest_cache/
+
+# OS generated files
+.DS_Store
+Thumbs.db

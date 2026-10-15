@@ -1,0 +1,16 @@
+# Core Deep Learning & Computer Vision
+torch>=2.0.0
+torchvision>=0.15.0
+ultralytics>=8.2.0
+
+# ONNX & Model Optimization
+onnx>=1.15.0
+onnxruntime>=1.17.0
+onnxslim>=0.2.0
+
+# Preprocessing & Utilities
+opencv-python>=4.8.0
+numpy>=1.24.0
+scipy>=1.10.0
+huggingface_hub>=0.20.0
+tqdm>=4.65.0
