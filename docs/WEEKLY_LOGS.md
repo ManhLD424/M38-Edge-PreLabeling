@@ -1,3 +1,5 @@
+> Historical development log. The pre-audit accuracy/completion statements below are superseded and are not validated results. See AUDIT_2026-10-16.md and REPAIR_2026-10-16.md; model agreement was previously mislabeled mAP. Do not use this log as current product evidence.
+
 # NHẬT KÝ TIẾN ĐỘ DỰ ÁN HÀNG TUẦN (WEEKLY PROGRESS LOGS)
 ## Đề tài P030 — M38: Model Compression for Edge Pre-Labeling (AI20K Cohort 4A)
 
