@@ -12,7 +12,7 @@ import cv2
 from src.core.inference.factory import make_engine, MODELS, ROOT
 
 
-def save_json(path, data):
+def write_json(path, data):
     path = Path(path)
     path.parent.mkdir(parents=True,exist_ok=True)
     path.write_text(json.dumps(data,indent=2,ensure_ascii=False),encoding='utf-8')
@@ -68,7 +68,7 @@ def compress(weights,split_manifest,image_root,output_root):
         for path in paths:
             shutil.copy2(path,Path(directory)/path.name)
         int8 = ModelQuantizer(str(fp16)).quantize_int8(str(Path(output_root)/'openvino_int8_rgb'),directory,len(paths))
-    save_json(Path(output_root)/'provenance.json',{'created_at':datetime.now(timezone.utc).isoformat(),
+    write_json(Path(output_root)/'provenance.json',{'created_at':datetime.now(timezone.utc).isoformat(),
         'weights_sha256':hashlib.sha256(Path(weights).read_bytes()).hexdigest(),
         'split_manifest_sha256':hashlib.sha256(Path(split_manifest).read_bytes()).hexdigest(),
         'preprocessing':'RGB letterbox 640, padding 114, float32 NCHW /255',
@@ -114,7 +114,7 @@ def prelabel_2d(source,model,out,conf,scope):
             'shapes':shapes,'elapsed_with_render_ms':round((time.perf_counter()-start)*1000,2)})
         cv2.imwrite(str(target/f'pred_{image_path.name}'),image)
     (target/'annotations.xml').write_text(export_cvat_xml(records),encoding='utf-8')
-    save_json(target/'studio_prelabels.json',{'schema':'m38-prelabels-v1','images':records})
+    write_json(target/'studio_prelabels.json',{'schema':'m38-prelabels-v1','images':records})
     click.echo(f'Exported {len(records)} images: {target}/annotations.xml (CVAT for images 1.1)')
 
 
@@ -130,8 +130,7 @@ def compare_runtimes(split_manifest,image_root,save_json):
     results = {}
     for runtime in ('onnx','openvino_fp16','openvino_int8'):
         results[runtime] = AccuracyBenchmark().evaluate_dataset(reference,make_engine(runtime),paths)
-    save_json_file = save_json
-    globals()['save_json'](save_json_file,{'split':split_manifest,'evaluations':results})
+    write_json(save_json,{'split':split_manifest,'evaluations':results})
     click.echo(json.dumps(results,indent=2))
 
 
@@ -146,7 +145,7 @@ def eval_accuracy(annotations,image_root,runtime,save_json):
     engine = make_engine(runtime,conf=.001)
     metrics = evaluate_coco(engine,annotations,image_root)
     metrics['annotation_sha256'] = hashlib.sha256(Path(annotations).read_bytes()).hexdigest()
-    globals()['save_json'](save_json,metrics)
+    write_json(save_json,metrics)
     click.echo(json.dumps({key:value for key,value in metrics.items() if key!='predictions'},indent=2))
 
 
@@ -181,8 +180,12 @@ def benchmark_2d(runs,warmup,sample_dir,save_json):
             'p95_ms':float(np.percentile(times,95)),'p99_ms':float(np.percentile(times,99)),
             'sequential_images_per_second':1000/float(times.mean()),'raw':raw,
             'model_path':str(engine.model_path),'model_sha256':hashlib.sha256(Path(engine.model_path).read_bytes()).hexdigest()}
-    globals()['save_json'](save_json,{'created_at':datetime.now(timezone.utc).isoformat(),
-        'hardware':platform.platform(),'cpu':platform.processor(),'threads':psutil.cpu_count(),
+    from src.core.inference.settings import CPU_THREADS
+    import importlib.metadata as metadata
+    write_json(save_json,{'created_at':datetime.now(timezone.utc).isoformat(),
+        'hardware':platform.platform(),'cpu':platform.processor(),'hardware_threads':psutil.cpu_count(),
+        'inference_threads':CPU_THREADS,'runs_per_image':runs,'warmup_runs':warmup,
+        'versions':{p:metadata.version(p) for p in ('torch','ultralytics','onnxruntime','openvino','numpy','opencv-python')},
         'protocol':'sequential predict including preprocess/NMS; no streaming throughput claim',
         'images':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in paths},'evaluations':results})
     click.echo(f'Wrote raw real-image timings: {save_json}')
@@ -215,7 +218,7 @@ def infer_3d(pcd,out,score_thresh,full_scene,checkpoint):
     detector = PointPillarsDetector(DetectorConfig(score_thresh=score_thresh,checkpoint_path=checkpoint))
     boxes = detector.detect(cloud,full_scene=full_scene)
     backend = 'pointpillars_checkpoint' if detector.model is not None else 'experimental_geometry_heuristic'
-    save_json(Path(out)/'proposals.json',{'schema':'m38-3d-proposals-v1','backend':backend,
+    write_json(Path(out)/'proposals.json',{'schema':'m38-3d-proposals-v1','backend':backend,
         'quality':'unvalidated; scores of heuristic are not calibrated probabilities',
         'boxes':[box.to_dict() for box in boxes]})
     click.echo(f'{backend}: {len(boxes)} proposals; custom JSON, not a CVAT import file')

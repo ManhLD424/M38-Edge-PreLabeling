@@ -1,9 +1,10 @@
 {
   "schema": "m38-predictions-v2",
-  "generated_at": "2026-10-16T06:49:50.532909+00:00",
+  "generated_at": "2026-10-16T07:01:21.661765+00:00",
   "hardware": {
     "platform": "Windows-11-10.0.26300-SP0",
-    "processor": "Intel64 Family 6 Model 154 Stepping 3, GenuineIntel"
+    "processor": "Intel64 Family 6 Model 154 Stepping 3, GenuineIntel",
+    "inference_threads": 4
   },
   "preprocessing": "RGB letterbox 640x640, padding114, class-aware NMS IoU .45, confidence floor .10, max_det300",
   "quality": "Model predictions, NOT ground truth. No validated AP or annotator time saving.",
@@ -55,7 +56,7 @@
       "split": "calibration",
       "runtimes": {
         "torch": {
-          "latency_ms": 171.942,
+          "latency_ms": 148.436,
           "detections": [
             {
               "class_id": 2,
@@ -170,7 +171,7 @@
           ]
         },
         "onnx": {
-          "latency_ms": 175.087,
+          "latency_ms": 129.833,
           "detections": [
             {
               "class_id": 2,
@@ -285,7 +286,7 @@
           ]
         },
         "openvino_fp16": {
-          "latency_ms": 199.326,
+          "latency_ms": 128.257,
           "detections": [
             {
               "class_id": 2,
@@ -400,7 +401,7 @@
           ]
         },
         "openvino_int8": {
-          "latency_ms": 94.583,
+          "latency_ms": 41.646,
           "detections": [
             {
               "class_id": 2,
@@ -545,7 +546,7 @@
       "split": "calibration",
       "runtimes": {
         "torch": {
-          "latency_ms": 192.626,
+          "latency_ms": 151.445,
           "detections": [
             {
               "class_id": 2,
@@ -836,7 +837,7 @@
           ]
         },
         "onnx": {
-          "latency_ms": 177.391,
+          "latency_ms": 123.124,
           "detections": [
             {
               "class_id": 2,
@@ -1127,7 +1128,7 @@
           ]
         },
         "openvino_fp16": {
-          "latency_ms": 216.741,
+          "latency_ms": 121.054,
           "detections": [
             {
               "class_id": 2,
@@ -1418,7 +1419,7 @@
           ]
         },
         "openvino_int8": {
-          "latency_ms": 111.321,
+          "latency_ms": 43.113,
           "detections": [
             {
               "class_id": 2,
@@ -1750,7 +1751,7 @@
       "split": "holdout",
       "runtimes": {
         "torch": {
-          "latency_ms": 164.94,
+          "latency_ms": 141.728,
           "detections": [
             {
               "class_id": 2,
@@ -1865,7 +1866,7 @@
           ]
         },
         "onnx": {
-          "latency_ms": 148.73,
+          "latency_ms": 127.846,
           "detections": [
             {
               "class_id": 2,
@@ -1980,7 +1981,7 @@
           ]
         },
         "openvino_fp16": {
-          "latency_ms": 243.749,
+          "latency_ms": 119.751,
           "detections": [
             {
               "class_id": 2,
@@ -2095,7 +2096,7 @@
           ]
         },
         "openvino_int8": {
-          "latency_ms": 75.678,
+          "latency_ms": 40.867,
           "detections": [
             {
               "class_id": 2,
@@ -2218,7 +2219,7 @@
       "split": "calibration",
       "runtimes": {
         "torch": {
-          "latency_ms": 167.091,
+          "latency_ms": 146.115,
           "detections": [
             {
               "class_id": 2,
@@ -2410,7 +2411,7 @@
           ]
         },
         "onnx": {
-          "latency_ms": 152.905,
+          "latency_ms": 131.691,
           "detections": [
             {
               "class_id": 2,
@@ -2602,7 +2603,7 @@
           ]
         },
         "openvino_fp16": {
-          "latency_ms": 238.036,
+          "latency_ms": 112.263,
           "detections": [
             {
               "class_id": 2,
@@ -2794,7 +2795,7 @@
           ]
         },
         "openvino_int8": {
-          "latency_ms": 93.221,
+          "latency_ms": 39.973,
           "detections": [
             {
               "class_id": 2,
@@ -3049,7 +3050,7 @@
       "split": "calibration",
       "runtimes": {
         "torch": {
-          "latency_ms": 172.412,
+          "latency_ms": 145.189,
           "detections": [
             {
               "class_id": 2,
@@ -3219,7 +3220,7 @@
           ]
         },
         "onnx": {
-          "latency_ms": 218.291,
+          "latency_ms": 126.458,
           "detections": [
             {
               "class_id": 2,
@@ -3389,7 +3390,7 @@
           ]
         },
         "openvino_fp16": {
-          "latency_ms": 222.199,
+          "latency_ms": 119.641,
           "detections": [
             {
               "class_id": 2,
@@ -3559,7 +3560,7 @@
           ]
         },
         "openvino_int8": {
-          "latency_ms": 79.952,
+          "latency_ms": 38.576,
           "detections": [
             {
               "class_id": 2,
@@ -3759,7 +3760,7 @@
       "split": "calibration",
       "runtimes": {
         "torch": {
-          "latency_ms": 177.801,
+          "latency_ms": 144.916,
           "detections": [
             {
               "class_id": 2,
@@ -3852,7 +3853,7 @@
           ]
         },
         "onnx": {
-          "latency_ms": 148.454,
+          "latency_ms": 131.583,
           "detections": [
             {
               "class_id": 2,
@@ -3945,7 +3946,7 @@
           ]
         },
         "openvino_fp16": {
-          "latency_ms": 228.68,
+          "latency_ms": 119.356,
           "detections": [
             {
               "class_id": 2,
@@ -4038,7 +4039,7 @@
           ]
         },
         "openvino_int8": {
-          "latency_ms": 70.906,
+          "latency_ms": 37.855,
           "detections": [
             {
               "class_id": 2,
@@ -4150,7 +4151,7 @@
       "split": "calibration",
       "runtimes": {
         "torch": {
-          "latency_ms": 166.995,
+          "latency_ms": 149.122,
           "detections": [
             {
               "class_id": 2,
@@ -4430,7 +4431,7 @@
           ]
         },
         "onnx": {
-          "latency_ms": 165.094,
+          "latency_ms": 135.743,
           "detections": [
             {
               "class_id": 2,
@@ -4710,7 +4711,7 @@
           ]
         },
         "openvino_fp16": {
-          "latency_ms": 215.791,
+          "latency_ms": 116.755,
           "detections": [
             {
               "class_id": 2,
@@ -4990,7 +4991,7 @@
           ]
         },
         "openvino_int8": {
-          "latency_ms": 66.511,
+          "latency_ms": 37.432,
           "detections": [
             {
               "class_id": 2,
@@ -5322,7 +5323,7 @@
       "split": "holdout",
       "runtimes": {
         "torch": {
-          "latency_ms": 175.657,
+          "latency_ms": 145.854,
           "detections": [
             {
               "class_id": 2,
@@ -5525,7 +5526,7 @@
           ]
         },
         "onnx": {
-          "latency_ms": 158.794,
+          "latency_ms": 141.89,
           "detections": [
             {
               "class_id": 2,
@@ -5728,7 +5729,7 @@
           ]
         },
         "openvino_fp16": {
-          "latency_ms": 209.107,
+          "latency_ms": 129.398,
           "detections": [
             {
               "class_id": 2,
@@ -5931,7 +5932,7 @@
           ]
         },
         "openvino_int8": {
-          "latency_ms": 71.87,
+          "latency_ms": 38.676,
           "detections": [
             {
               "class_id": 2,
@@ -6120,7 +6121,7 @@
       "split": "calibration",
       "runtimes": {
         "torch": {
-          "latency_ms": 167.647,
+          "latency_ms": 145.504,
           "detections": [
             {
               "class_id": 2,
@@ -6169,7 +6170,7 @@
           ]
         },
         "onnx": {
-          "latency_ms": 184.189,
+          "latency_ms": 130.114,
           "detections": [
             {
               "class_id": 2,
@@ -6218,7 +6219,7 @@
           ]
         },
         "openvino_fp16": {
-          "latency_ms": 272.038,
+          "latency_ms": 126.914,
           "detections": [
             {
               "class_id": 2,
@@ -6267,7 +6268,7 @@
           ]
         },
         "openvino_int8": {
-          "latency_ms": 70.905,
+          "latency_ms": 38.002,
           "detections": [
             {
               "class_id": 2,
@@ -6324,7 +6325,7 @@
       "split": "calibration",
       "runtimes": {
         "torch": {
-          "latency_ms": 183.042,
+          "latency_ms": 147.8,
           "detections": [
             {
               "class_id": 2,
@@ -6560,7 +6561,7 @@
           ]
         },
         "onnx": {
-          "latency_ms": 166.325,
+          "latency_ms": 136.001,
           "detections": [
             {
               "class_id": 2,
@@ -6796,7 +6797,7 @@
           ]
         },
         "openvino_fp16": {
-          "latency_ms": 225.899,
+          "latency_ms": 118.971,
           "detections": [
             {
               "class_id": 2,
@@ -7032,7 +7033,7 @@
           ]
         },
         "openvino_int8": {
-          "latency_ms": 88.058,
+          "latency_ms": 36.923,
           "detections": [
             {
               "class_id": 2,
@@ -7254,7 +7255,7 @@
       "split": "calibration",
       "runtimes": {
         "torch": {
-          "latency_ms": 181.522,
+          "latency_ms": 154.207,
           "detections": [
             {
               "class_id": 2,
@@ -7490,7 +7491,7 @@
           ]
         },
         "onnx": {
-          "latency_ms": 175.834,
+          "latency_ms": 132.143,
           "detections": [
             {
               "class_id": 2,
@@ -7726,7 +7727,7 @@
           ]
         },
         "openvino_fp16": {
-          "latency_ms": 196.591,
+          "latency_ms": 117.656,
           "detections": [
             {
               "class_id": 2,
@@ -7962,7 +7963,7 @@
           ]
         },
         "openvino_int8": {
-          "latency_ms": 79.427,
+          "latency_ms": 38.037,
           "detections": [
             {
               "class_id": 2,
@@ -8228,7 +8229,7 @@
       "split": "holdout",
       "runtimes": {
         "torch": {
-          "latency_ms": 196.414,
+          "latency_ms": 151.547,
           "detections": [
             {
               "class_id": 2,
@@ -8475,7 +8476,7 @@
           ]
         },
         "onnx": {
-          "latency_ms": 147.956,
+          "latency_ms": 126.346,
           "detections": [
             {
               "class_id": 2,
@@ -8722,7 +8723,7 @@
           ]
         },
         "openvino_fp16": {
-          "latency_ms": 203.338,
+          "latency_ms": 117.923,
           "detections": [
             {
               "class_id": 2,
@@ -8969,7 +8970,7 @@
           ]
         },
         "openvino_int8": {
-          "latency_ms": 73.699,
+          "latency_ms": 40.324,
           "detections": [
             {
               "class_id": 2,
@@ -9257,7 +9258,7 @@
       "split": "calibration",
       "runtimes": {
         "torch": {
-          "latency_ms": 183.533,
+          "latency_ms": 153.743,
           "detections": [
             {
               "class_id": 2,
@@ -9460,7 +9461,7 @@
           ]
         },
         "onnx": {
-          "latency_ms": 163.994,
+          "latency_ms": 129.735,
           "detections": [
             {
               "class_id": 2,
@@ -9663,7 +9664,7 @@
           ]
         },
         "openvino_fp16": {
-          "latency_ms": 225.825,
+          "latency_ms": 114.159,
           "detections": [
             {
               "class_id": 2,
@@ -9866,7 +9867,7 @@
           ]
         },
         "openvino_int8": {
-          "latency_ms": 83.206,
+          "latency_ms": 45.525,
           "detections": [
             {
               "class_id": 2,
@@ -10099,7 +10100,7 @@
       "split": "holdout",
       "runtimes": {
         "torch": {
-          "latency_ms": 177.572,
+          "latency_ms": 166.112,
           "detections": [
             {
               "class_id": 2,
@@ -10225,7 +10226,7 @@
           ]
         },
         "onnx": {
-          "latency_ms": 165.372,
+          "latency_ms": 119.292,
           "detections": [
             {
               "class_id": 2,
@@ -10351,7 +10352,7 @@
           ]
         },
         "openvino_fp16": {
-          "latency_ms": 223.739,
+          "latency_ms": 113.569,
           "detections": [
             {
               "class_id": 2,
@@ -10477,7 +10478,7 @@
           ]
         },
         "openvino_int8": {
-          "latency_ms": 75.492,
+          "latency_ms": 42.172,
           "detections": [
             {
               "class_id": 2,
@@ -10633,7 +10634,7 @@
       "split": "holdout",
       "runtimes": {
         "torch": {
-          "latency_ms": 174.537,
+          "latency_ms": 146.819,
           "detections": [
             {
               "class_id": 2,
@@ -10792,7 +10793,7 @@
           ]
         },
         "onnx": {
-          "latency_ms": 154.029,
+          "latency_ms": 118.639,
           "detections": [
             {
               "class_id": 2,
@@ -10951,7 +10952,7 @@
           ]
         },
         "openvino_fp16": {
-          "latency_ms": 209.571,
+          "latency_ms": 114.667,
           "detections": [
             {
               "class_id": 2,
@@ -11110,7 +11111,7 @@
           ]
         },
         "openvino_int8": {
-          "latency_ms": 79.315,
+          "latency_ms": 40.776,
           "detections": [
             {
               "class_id": 2,
@@ -11321,7 +11322,7 @@
       "split": "calibration",
       "runtimes": {
         "torch": {
-          "latency_ms": 174.312,
+          "latency_ms": 150.087,
           "detections": [
             {
               "class_id": 2,
@@ -11370,7 +11371,7 @@
           ]
         },
         "onnx": {
-          "latency_ms": 159.975,
+          "latency_ms": 133.959,
           "detections": [
             {
               "class_id": 2,
@@ -11419,7 +11420,7 @@
           ]
         },
         "openvino_fp16": {
-          "latency_ms": 207.974,
+          "latency_ms": 120.562,
           "detections": [
             {
               "class_id": 2,
@@ -11468,7 +11469,7 @@
           ]
         },
         "openvino_int8": {
-          "latency_ms": 71.0,
+          "latency_ms": 38.181,
           "detections": [
             {
               "class_id": 2,
@@ -11525,7 +11526,7 @@
       "split": "calibration",
       "runtimes": {
         "torch": {
-          "latency_ms": 159.074,
+          "latency_ms": 148.237,
           "detections": [
             {
               "class_id": 2,
@@ -11728,7 +11729,7 @@
           ]
         },
         "onnx": {
-          "latency_ms": 173.012,
+          "latency_ms": 126.938,
           "detections": [
             {
               "class_id": 2,
@@ -11931,7 +11932,7 @@
           ]
         },
         "openvino_fp16": {
-          "latency_ms": 213.203,
+          "latency_ms": 114.962,
           "detections": [
             {
               "class_id": 2,
@@ -12134,7 +12135,7 @@
           ]
         },
         "openvino_int8": {
-          "latency_ms": 68.279,
+          "latency_ms": 39.689,
           "detections": [
             {
               "class_id": 2,
@@ -12323,7 +12324,7 @@
       "split": "calibration",
       "runtimes": {
         "torch": {
-          "latency_ms": 182.508,
+          "latency_ms": 154.82,
           "detections": [
             {
               "class_id": 2,
@@ -12515,7 +12516,7 @@
           ]
         },
         "onnx": {
-          "latency_ms": 298.293,
+          "latency_ms": 125.729,
           "detections": [
             {
               "class_id": 2,
@@ -12707,7 +12708,7 @@
           ]
         },
         "openvino_fp16": {
-          "latency_ms": 207.372,
+          "latency_ms": 116.503,
           "detections": [
             {
               "class_id": 2,
@@ -12899,7 +12900,7 @@
           ]
         },
         "openvino_int8": {
-          "latency_ms": 76.831,
+          "latency_ms": 41.015,
           "detections": [
             {
               "class_id": 2,
@@ -13110,7 +13111,7 @@
       "split": "calibration",
       "runtimes": {
         "torch": {
-          "latency_ms": 188.491,
+          "latency_ms": 154.677,
           "detections": [
             {
               "class_id": 2,
@@ -13203,7 +13204,7 @@
           ]
         },
         "onnx": {
-          "latency_ms": 237.847,
+          "latency_ms": 125.692,
           "detections": [
             {
               "class_id": 2,
@@ -13296,7 +13297,7 @@
           ]
         },
         "openvino_fp16": {
-          "latency_ms": 206.827,
+          "latency_ms": 117.597,
           "detections": [
             {
               "class_id": 2,
@@ -13389,7 +13390,7 @@
           ]
         },
         "openvino_int8": {
-          "latency_ms": 70.539,
+          "latency_ms": 40.034,
           "detections": [
             {
               "class_id": 2,
@@ -13512,7 +13513,7 @@
       "split": "holdout",
       "runtimes": {
         "torch": {
-          "latency_ms": 196.008,
+          "latency_ms": 149.313,
           "detections": [
             {
               "class_id": 2,
@@ -13770,7 +13771,7 @@
           ]
         },
         "onnx": {
-          "latency_ms": 146.562,
+          "latency_ms": 124.074,
           "detections": [
             {
               "class_id": 2,
@@ -14028,7 +14029,7 @@
           ]
         },
         "openvino_fp16": {
-          "latency_ms": 197.163,
+          "latency_ms": 117.497,
           "detections": [
             {
               "class_id": 2,
@@ -14286,7 +14287,7 @@
           ]
         },
         "openvino_int8": {
-          "latency_ms": 69.982,
+          "latency_ms": 39.27,
           "detections": [
             {
               "class_id": 2,
@@ -14585,7 +14586,7 @@
       "split": "calibration",
       "runtimes": {
         "torch": {
-          "latency_ms": 200.446,
+          "latency_ms": 146.189,
           "detections": [
             {
               "class_id": 2,
@@ -14744,7 +14745,7 @@
           ]
         },
         "onnx": {
-          "latency_ms": 154.922,
+          "latency_ms": 115.909,
           "detections": [
             {
               "class_id": 2,
@@ -14903,7 +14904,7 @@
           ]
         },
         "openvino_fp16": {
-          "latency_ms": 213.743,
+          "latency_ms": 120.253,
           "detections": [
             {
               "class_id": 2,
@@ -15062,7 +15063,7 @@
           ]
         },
         "openvino_int8": {
-          "latency_ms": 69.122,
+          "latency_ms": 38.029,
           "detections": [
             {
               "class_id": 2,
@@ -15251,19 +15252,19 @@
       "split": "holdout",
       "runtimes": {
         "torch": {
-          "latency_ms": 190.714,
+          "latency_ms": 149.808,
           "detections": []
         },
         "onnx": {
-          "latency_ms": 229.762,
+          "latency_ms": 117.034,
           "detections": []
         },
         "openvino_fp16": {
-          "latency_ms": 212.232,
+          "latency_ms": 121.995,
           "detections": []
         },
         "openvino_int8": {
-          "latency_ms": 72.442,
+          "latency_ms": 44.912,
           "detections": []
         }
       }
@@ -15275,7 +15276,7 @@
       "split": "holdout",
       "runtimes": {
         "torch": {
-          "latency_ms": 222.058,
+          "latency_ms": 152.647,
           "detections": [
             {
               "class_id": 2,
@@ -15478,7 +15479,7 @@
           ]
         },
         "onnx": {
-          "latency_ms": 186.975,
+          "latency_ms": 116.708,
           "detections": [
             {
               "class_id": 2,
@@ -15681,7 +15682,7 @@
           ]
         },
         "openvino_fp16": {
-          "latency_ms": 240.112,
+          "latency_ms": 114.076,
           "detections": [
             {
               "class_id": 2,
@@ -15884,7 +15885,7 @@
           ]
         },
         "openvino_int8": {
-          "latency_ms": 73.691,
+          "latency_ms": 44.723,
           "detections": [
             {
               "class_id": 2,
@@ -16117,7 +16118,7 @@
       "split": "calibration",
       "runtimes": {
         "torch": {
-          "latency_ms": 363.436,
+          "latency_ms": 149.963,
           "detections": [
             {
               "class_id": 2,
@@ -16353,7 +16354,7 @@
           ]
         },
         "onnx": {
-          "latency_ms": 173.609,
+          "latency_ms": 132.014,
           "detections": [
             {
               "class_id": 2,
@@ -16589,7 +16590,7 @@
           ]
         },
         "openvino_fp16": {
-          "latency_ms": 223.282,
+          "latency_ms": 116.715,
           "detections": [
             {
               "class_id": 2,
@@ -16825,7 +16826,7 @@
           ]
         },
         "openvino_int8": {
-          "latency_ms": 73.134,
+          "latency_ms": 48.593,
           "detections": [
             {
               "class_id": 2,
@@ -17080,7 +17081,7 @@
       "split": "holdout",
       "runtimes": {
         "torch": {
-          "latency_ms": 244.299,
+          "latency_ms": 148.861,
           "detections": [
             {
               "class_id": 2,
@@ -17272,7 +17273,7 @@
           ]
         },
         "onnx": {
-          "latency_ms": 175.802,
+          "latency_ms": 125.964,
           "detections": [
             {
               "class_id": 2,
@@ -17464,7 +17465,7 @@
           ]
         },
         "openvino_fp16": {
-          "latency_ms": 221.476,
+          "latency_ms": 117.578,
           "detections": [
             {
               "class_id": 2,
@@ -17656,7 +17657,7 @@
           ]
         },
         "openvino_int8": {
-          "latency_ms": 72.964,
+          "latency_ms": 43.677,
           "detections": [
             {
               "class_id": 2,
@@ -17845,7 +17846,7 @@
       "split": "holdout",
       "runtimes": {
         "torch": {
-          "latency_ms": 201.862,
+          "latency_ms": 146.093,
           "detections": [
             {
               "class_id": 2,
@@ -18015,7 +18016,7 @@
           ]
         },
         "onnx": {
-          "latency_ms": 152.245,
+          "latency_ms": 125.638,
           "detections": [
             {
               "class_id": 2,
@@ -18185,7 +18186,7 @@
           ]
         },
         "openvino_fp16": {
-          "latency_ms": 187.864,
+          "latency_ms": 115.939,
           "detections": [
             {
               "class_id": 2,
@@ -18355,7 +18356,7 @@
           ]
         },
         "openvino_int8": {
-          "latency_ms": 73.749,
+          "latency_ms": 38.423,
           "detections": [
             {
               "class_id": 2,

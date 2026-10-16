@@ -16,8 +16,9 @@ class OpenVINOInferenceEngine(BaseInferenceEngine):
         if not path.is_file():
             raise FileNotFoundError(f'Missing OpenVINO model: {path}')
         model = self.core.read_model(str(path))
+        from .settings import CPU_THREADS
         self.compiled_model = self.core.compile_model(model, 'CPU',
-            {'PERFORMANCE_HINT':'LATENCY', 'NUM_STREAMS':'1'})
+            {'PERFORMANCE_HINT':'LATENCY', 'NUM_STREAMS':'1', 'INFERENCE_NUM_THREADS':CPU_THREADS})
         self.output_layer = self.compiled_model.output(0)
 
     def predict(self, image):

@@ -24,6 +24,9 @@ class TorchInferenceEngine(BaseInferenceEngine):
         if not Path(self.model_path).is_file():
             raise FileNotFoundError(f'Missing PyTorch model: {self.model_path}')
         self.model = YOLO(self.model_path)
+        import torch
+        from .settings import CPU_THREADS
+        torch.set_num_threads(CPU_THREADS)
 
     def predict(self, image: np.ndarray) -> List[Detection]:
         results = self.model.predict(

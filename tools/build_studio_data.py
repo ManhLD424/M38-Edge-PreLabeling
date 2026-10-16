@@ -23,6 +23,8 @@ def build():
         'preprocessing':'RGB letterbox 640x640, padding114, class-aware NMS IoU .45, confidence floor .10, max_det300',
         'quality':'Model predictions, NOT ground truth. No validated AP or annotator time saving.',
         'models':{},'images':{}}
+    from src.core.inference.settings import CPU_THREADS
+    manifest['hardware']['inference_threads']=CPU_THREADS
     images=sorted((ROOT/'data/sample_images').glob('*.jpg'))
     split=json.loads((ROOT/'data/split_manifest.json').read_text())
     calibration={p['sha256'] for p in split['calibration']}

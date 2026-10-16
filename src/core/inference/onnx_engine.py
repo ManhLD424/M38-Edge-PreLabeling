@@ -13,7 +13,11 @@ class ONNXInferenceEngine(BaseInferenceEngine):
     def load_model(self):
         if not Path(self.model_path).is_file():
             raise FileNotFoundError(f'Missing ONNX model: {self.model_path}')
-        self.session = ort.InferenceSession(str(self.model_path), providers=['CPUExecutionProvider'])
+        from .settings import CPU_THREADS
+        options = ort.SessionOptions()
+        options.intra_op_num_threads = CPU_THREADS
+        options.inter_op_num_threads = 1
+        self.session = ort.InferenceSession(str(self.model_path), sess_options=options, providers=['CPUExecutionProvider'])
         self.input_name = self.session.get_inputs()[0].name
 
     def predict(self, image):
