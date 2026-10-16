@@ -1,80 +1,44 @@
-"""
-Module Exporter: Chuyển đổi mô hình Pre-trained PyTorch sang ONNX và OpenVINO FP16.
-"""
-
-import sys
-if sys.platform == "win32":
-    if hasattr(sys.stdout, "reconfigure"):
-        sys.stdout.reconfigure(encoding="utf-8")
-    if hasattr(sys.stderr, "reconfigure"):
-        sys.stderr.reconfigure(encoding="utf-8")
-
-import os
+"""Export in an isolated temporary directory and preserve existing user artifacts."""
 from pathlib import Path
-from typing import Dict, Any, Optional
-from ultralytics import YOLO
-import openvino as ov
+import shutil
+import tempfile
 
 
 class ModelExporter:
-    """
-    Quản lý quy trình xuất đồ thị tính toán từ checkpoint PyTorch gốc (.pt).
-    """
-
-    def __init__(self, weights_path: str, output_root: Optional[str] = "models"):
-        self.weights_path = Path(weights_path)
+    def __init__(self, weights_path, output_root='models'):
+        self.weights_path = Path(weights_path).resolve()
         self.output_root = Path(output_root)
-        if not self.weights_path.exists():
-            raise FileNotFoundError(f"Không tìm thấy checkpoint: {self.weights_path}")
+        if not self.weights_path.is_file():
+            raise FileNotFoundError(self.weights_path)
 
-        self.model = YOLO(str(self.weights_path))
+    def export_onnx(self, output_dir=None, opset=17):
+        target = Path(output_dir) if output_dir else self.output_root/'onnx'
+        destination = target/f'{self.weights_path.stem}.onnx'
+        if destination.exists():
+            raise FileExistsError(destination)
+        from ultralytics import YOLO
+        with tempfile.TemporaryDirectory(prefix='m38-export-') as directory:
+            temporary = Path(directory)/self.weights_path.name
+            shutil.copy2(self.weights_path,temporary)
+            exported = YOLO(str(temporary)).export(format='onnx',opset=opset,dynamic=False,
+                                                 simplify=True,imgsz=640,half=False)
+            target.mkdir(parents=True,exist_ok=True)
+            shutil.copy2(exported,destination)
+        return destination
 
-    def export_onnx(self, output_dir: Optional[str] = None, opset: int = 17) -> Path:
-        """
-        Xuất mô hình sang định dạng ONNX tiêu chuẩn.
-        """
-        target_dir = Path(output_dir) if output_dir else self.output_root / "onnx"
-        target_dir.mkdir(parents=True, exist_ok=True)
-
-        print(f"[*] Đang xuất ONNX (opset {opset}) từ: {self.weights_path}...")
-        exported_path = self.model.export(
-            format="onnx",
-            opset=opset,
-            dynamic=False,
-            simplify=True,
-            imgsz=640
-        )
-        dest_path = target_dir / f"{self.weights_path.stem}.onnx"
-        if Path(exported_path) != dest_path:
-            import shutil
-            shutil.move(str(exported_path), str(dest_path))
-
-        print(f"[+] Xuất ONNX thành công: {dest_path}")
-        return dest_path
-
-    def export_openvino_fp16(self, output_dir: Optional[str] = None) -> Path:
-        """
-        Chuyển đổi sang định dạng OpenVINO Intermediate Representation (FP16).
-        """
-        target_dir = Path(output_dir) if output_dir else self.output_root / "openvino_fp16"
-        target_dir.mkdir(parents=True, exist_ok=True)
-
-        print(f"[*] Đang chuyển đổi sang OpenVINO IR (FP16)...")
-        exported_path = self.model.export(
-            format="openvino",
-            half=True,
-            imgsz=640
-        )
-        exported_dir = Path(exported_path)
-        
-        # Di chuyển các artifact (.xml, .bin) vào target_dir
-        dest_xml = target_dir / f"{self.weights_path.stem}_fp16.xml"
-        dest_bin = target_dir / f"{self.weights_path.stem}_fp16.bin"
-
-        for file in exported_dir.glob("*.xml"):
-            file.replace(dest_xml)
-        for file in exported_dir.glob("*.bin"):
-            file.replace(dest_bin)
-
-        print(f"[+] Xuất OpenVINO FP16 thành công tại: {dest_xml}")
-        return dest_xml
+    def export_openvino_fp16(self, output_dir=None):
+        target = Path(output_dir) if output_dir else self.output_root/'openvino_fp16'
+        xml = target/f'{self.weights_path.stem}_fp16.xml'
+        binary = xml.with_suffix('.bin')
+        if xml.exists() or binary.exists():
+            raise FileExistsError(f'Preserving existing model pair: {xml}')
+        from ultralytics import YOLO
+        with tempfile.TemporaryDirectory(prefix='m38-export-') as directory:
+            temporary = Path(directory)/self.weights_path.name
+            shutil.copy2(self.weights_path,temporary)
+            exported = Path(YOLO(str(temporary)).export(format='openvino',half=True,imgsz=640))
+            source_xml = next(exported.glob('*.xml'))
+            target.mkdir(parents=True,exist_ok=True)
+            shutil.copy2(source_xml,xml)
+            shutil.copy2(source_xml.with_suffix('.bin'),binary)
+        return xml
