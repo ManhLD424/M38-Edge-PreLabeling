@@ -12,7 +12,7 @@ pointpillars:
   score_thresh: 0.30
   heading_mode: "kitti"                           # "kitti" or "forward"
   z_bottom: true                                  # Checkpoint returns bottom face Z
-  checkpoint: "models/pretrained/epoch_160.pth"
+  checkpoint: null                                # Explicit path required for learned backend
 
 classes:
   0: "pedestrian"

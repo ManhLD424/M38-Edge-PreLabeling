@@ -51,6 +51,16 @@ def test_3d_heuristic_respects_score_threshold():
     assert detector.detect(read_pcd('data/pointclouds/demo.pcd').xyz) == []
 
 
+def test_3d_full_scene_runs_rear_pass_in_heuristic_backend():
+    from src.core.models.detector import PointPillarsDetector
+    from src.core.pointcloud.pcd_io import read_pcd
+    cloud=read_pcd('data/pointclouds/demo.pcd').xyz.copy()
+    cloud[:,:2] *= -1
+    detector=PointPillarsDetector()
+    assert detector.detect(cloud)==[]
+    assert len(detector.detect(cloud,full_scene=True))>0
+
+
 def test_requested_missing_checkpoint_cannot_silently_fallback():
     from src.core.models.detector import PointPillarsDetector, DetectorConfig
     with pytest.raises(FileNotFoundError):
@@ -91,6 +101,18 @@ def test_api_handles_invalid_json_and_remains_usable(api_server):
 def test_api_rejects_unknown_runtime_before_loading_model(api_server):
     response = requests.post(api_server+'/api/predict', json={'runtime':'unknown','image_name':'BDD01.jpg'}, timeout=5)
     assert response.status_code == 400
+
+
+def test_api_returns_prediction_image_hash_and_dimensions(api_server, monkeypatch):
+    from src.web.app import CACHED_ENGINES
+    from tests.test_accuracy_bench import DummyEngine
+    import hashlib
+    monkeypatch.setitem(CACHED_ENGINES,'onnx',DummyEngine([]))
+    response=requests.post(api_server+'/api/predict',json={'runtime':'onnx','image_name':'BDD06.jpg'},timeout=5)
+    data=response.json()
+    assert response.status_code==200
+    assert data['image_sha256']==hashlib.sha256(Path('data/sample_images/BDD06.jpg').read_bytes()).hexdigest()
+    assert (data['width'],data['height'])==(1280,720)
 
 
 def test_prelabel_export_is_cvat_xml_with_filtered_boxes():

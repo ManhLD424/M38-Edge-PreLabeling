@@ -65,6 +65,8 @@ models/openvino_int8/*.xml
 !docs/models/yolov8s.onnx
 models/openvino_int8_rgb/*.xml
 models/openvino_int8_rgb/*.bin
+models/rebuilt/
+models/repair-smoke-v2/
 *.engine
 
 # Datasets and bulk images

@@ -129,8 +129,11 @@ class CVAT3DClient:
         actions = {'merge': 'create', 'create': 'create', 'update': 'update'}
         if mode not in (*actions, 'replace'):
             raise ValueError('mode must be create, merge, update or replace')
-        if 'version' not in payload:
+        version = payload.get('version')
+        if isinstance(version, bool) or not isinstance(version, int) or version < 0:
             raise ValueError('An explicit current CVAT annotation version is required')
+        if not self.token:
+            raise RuntimeError('CVAT token is required before annotation writes')
         if mode in ('merge', 'create') and any('id' in item for key in ('shapes','tracks','tags') for item in payload.get(key, [])):
             raise ValueError('Create payload must not contain server object IDs')
         if mode == "replace":

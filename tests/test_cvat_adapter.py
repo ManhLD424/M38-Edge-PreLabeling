@@ -9,9 +9,9 @@ def test_cvat_3d_shapes_payload():
     c2 = Cuboid3D(x=5.0, y=-1.0, z=0.0, dx=0.7, dy=0.7, dz=1.7, yaw=0.0, score=0.85, class_name="pedestrian")
 
     adapter = CVAT3DAdapter(label_mapping={"vehicles": 10, "pedestrian": 20})
-    payload = adapter.to_shapes_payload([c1, c2], frame=0)
+    payload = adapter.to_shapes_payload([c1, c2], frame=0, version=7)
 
-    assert payload["version"] == 0
+    assert payload["version"] == 7
     assert len(payload["shapes"]) == 2
 
     s1 = payload["shapes"][0]

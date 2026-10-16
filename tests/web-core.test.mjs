@@ -25,3 +25,8 @@ test('old inference responses cannot become the active result',()=>{
   const gate=createRequestGate();const old=gate.next();const current=gate.next();
   assert.equal(gate.current(old),false);assert.equal(gate.current(current),true);
 });
+test('COCO export preserves person while traffic export maps pedestrian',()=>{
+  const boxes=[{class_name:'person',confidence:.9,box_xyxy:[1,2,30,40]}];
+  assert.match(toCvatXml([{name:'x.jpg',width:100,height:100,scope:'all',boxes}]),/label="person"/);
+  assert.match(toCvatXml([{name:'x.jpg',width:100,height:100,scope:'traffic',boxes}]),/label="pedestrian"/);
+});

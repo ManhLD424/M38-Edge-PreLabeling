@@ -43,6 +43,9 @@ def build():
         manifest['models'][runtime]={'path':relative,'sha256':digest(model),
             'files':{p.name:digest(p) for p in files},'size_bytes':sum(p.stat().st_size for p in files),
             'quality_note':'Illustrative split only, no independent scene metadata or GT. INT8 was recalibrated on the calibration split.' if runtime=='openvino_int8' else 'COCO pretrained model; not BDD-trained or validated against GT here.'}
+        if runtime=='torch':
+            from src.core.inference.fingerprint import parameter_sha256
+            manifest['models'][runtime]['parameter_sha256']=parameter_sha256(model)
         engine=make_engine(runtime,conf=.1)
         engine.predict(cv2.imread(str(images[0])))  # explicit warmup before timings
         for path in images:

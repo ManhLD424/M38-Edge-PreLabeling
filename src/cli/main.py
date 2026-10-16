@@ -105,7 +105,7 @@ def prelabel_2d(source,model,out,conf,scope):
         for det in detections:
             if scope=='traffic' and det.class_name not in COCO_TO_BDD100K:
                 continue
-            label = COCO_TO_BDD100K.get(det.class_name,det.class_name)
+            label = COCO_TO_BDD100K.get(det.class_name,det.class_name) if scope=='traffic' else det.class_name
             shapes.append({'type':'rectangle','label':label,'points':det.box_cvat,'confidence':det.confidence})
             x1,y1,x2,y2 = map(int,det.box_xyxy)
             cv2.rectangle(image,(x1,y1),(x2,y2),(40,220,140),2)
@@ -206,7 +206,8 @@ def serve(port,host):
 @click.option('--score-thresh',default=.3,type=click.FloatRange(0,1))
 @click.option('--full-scene',is_flag=True)
 @click.option('--checkpoint',type=click.Path(exists=True,dir_okay=False))
-def infer_3d(pcd,out,score_thresh,full_scene,checkpoint):
+@click.option('--config',default='configs/default_config.yaml',type=click.Path(exists=True,dir_okay=False))
+def infer_3d(pcd,out,score_thresh,full_scene,checkpoint,config):
     """Experimental geometry proposals, or explicit learned checkpoint; no CVAT IDs guessed."""
     from src.core.models.detector import PointPillarsDetector, DetectorConfig
     from src.core.pointcloud.pcd_io import read_pcd
@@ -215,9 +216,16 @@ def infer_3d(pcd,out,score_thresh,full_scene,checkpoint):
     if points.intensity is not None:
         import numpy as np
         cloud = np.column_stack((cloud,points.intensity))
-    detector = PointPillarsDetector(DetectorConfig(score_thresh=score_thresh,checkpoint_path=checkpoint))
+    import yaml
+    settings = yaml.safe_load(Path(config).read_text(encoding='utf-8'))
+    model = settings['pointpillars']
+    classes = [name for _,name in sorted(settings['classes'].items(),key=lambda pair:int(pair[0]))]
+    detector = PointPillarsDetector(DetectorConfig(score_thresh=score_thresh,
+        checkpoint_path=checkpoint or model.get('checkpoint'),classes=classes,
+        point_cloud_range=tuple(settings['pointcloud']['range']),voxel_size=tuple(model['voxel_size']),
+        delta=float(model['delta']),heading_mode=model['heading_mode'],z_bottom=bool(model['z_bottom'])))
     boxes = detector.detect(cloud,full_scene=full_scene)
-    backend = 'pointpillars_checkpoint' if detector.model is not None else 'experimental_geometry_heuristic'
+    backend = detector.backend
     write_json(Path(out)/'proposals.json',{'schema':'m38-3d-proposals-v1','backend':backend,
         'quality':'unvalidated; scores of heuristic are not calibrated probabilities',
         'boxes':[box.to_dict() for box in boxes]})

@@ -28,7 +28,7 @@ class BenchmarkResult3D:
     mean_detect_ms: float
     mean_cvat_ms: float
     throughput_fps: float
-    peak_ram_mb: float
+    rss_before_after_max_mb: float
     detected_cuboids: int
 
 
@@ -109,6 +109,6 @@ class Benchmark3D:
             mean_detect_ms=round(float(np.mean(detect_times)), 2),
             mean_cvat_ms=round(float(np.mean(cvat_times)), 2),
             throughput_fps=round(fps, 1),
-            peak_ram_mb=round(peak_ram, 1),
+            rss_before_after_max_mb=round(peak_ram, 1),
             detected_cuboids=len(last_cuboids),
         )

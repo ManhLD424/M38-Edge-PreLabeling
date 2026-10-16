@@ -1,8 +1,19 @@
 {
-  "created_at": "2026-10-16T06:52:03.181622+00:00",
+  "created_at": "2026-10-16T07:04:55.466202+00:00",
   "hardware": "Windows-11-10.0.26300-SP0",
   "cpu": "Intel64 Family 6 Model 154 Stepping 3, GenuineIntel",
-  "threads": 12,
+  "hardware_threads": 12,
+  "inference_threads": 4,
+  "runs_per_image": 3,
+  "warmup_runs": 3,
+  "versions": {
+    "torch": "2.14.0",
+    "ultralytics": "8.4.154",
+    "onnxruntime": "1.30.0",
+    "openvino": "2026.4.1",
+    "numpy": "2.4.6",
+    "opencv-python": "5.0.0.93"
+  },
   "protocol": "sequential predict including preprocess/NMS; no streaming throughput claim",
   "images": {
     "BDD01.jpg": "2d1bf9fc1063651911c8ab531a3f70ddec83c45c7cb6c8d905e7b3685e481983",
@@ -34,1292 +45,1916 @@
   },
   "evaluations": {
     "torch": {
-      "mean_ms": 208.99744423076922,
-      "p50_ms": 196.90120000000002,
-      "p95_ms": 309.44117,
-      "p99_ms": 338.909695,
-      "sequential_images_per_second": 4.784747505791638,
+      "mean_ms": 153.64353974358977,
+      "p50_ms": 147.87745,
+      "p95_ms": 186.65165,
+      "p99_ms": 249.7258760000003,
+      "sequential_images_per_second": 6.508571734736549,
       "raw": [
         {
           "image": "BDD01.jpg",
           "repeat": 0,
           "boxes": 9,
-          "ms": 199.6106
+          "ms": 149.2233
         },
         {
           "image": "BDD02.jpg",
           "repeat": 0,
           "boxes": 17,
-          "ms": 190.5375
+          "ms": 143.169
         },
         {
           "image": "BDD03.jpg",
           "repeat": 0,
           "boxes": 9,
-          "ms": 185.4733
+          "ms": 149.9463
         },
         {
           "image": "BDD04.jpg",
           "repeat": 0,
           "boxes": 15,
-          "ms": 292.7169
+          "ms": 146.5545
         },
         {
           "image": "BDD05.jpg",
           "repeat": 0,
           "boxes": 14,
-          "ms": 344.2726
+          "ms": 149.3478
         },
         {
           "image": "BDD06.jpg",
           "repeat": 0,
           "boxes": 4,
-          "ms": 246.9349
+          "ms": 148.6509
         },
         {
           "image": "BDD07.jpg",
           "repeat": 0,
           "boxes": 16,
-          "ms": 198.4441
+          "ms": 150.7289
         },
         {
           "image": "BDD08.jpg",
           "repeat": 0,
           "boxes": 12,
-          "ms": 233.8656
+          "ms": 149.2491
         },
         {
           "image": "BDD09.jpg",
           "repeat": 0,
           "boxes": 4,
-          "ms": 202.5219
+          "ms": 148.5286
         },
         {
           "image": "BDD10.jpg",
           "repeat": 0,
           "boxes": 13,
-          "ms": 214.7598
+          "ms": 144.4278
         },
         {
           "image": "BDD11.jpg",
           "repeat": 0,
           "boxes": 13,
-          "ms": 217.3136
+          "ms": 144.0572
         },
         {
           "image": "BDD12.jpg",
           "repeat": 0,
           "boxes": 14,
-          "ms": 226.3799
+          "ms": 152.461
         },
         {
           "image": "BDD13.jpg",
           "repeat": 0,
           "boxes": 12,
-          "ms": 258.8502
+          "ms": 149.8264
         },
         {
           "image": "BDD14.jpg",
           "repeat": 0,
           "boxes": 7,
-          "ms": 212.8597
+          "ms": 152.615
         },
         {
           "image": "BDD15.jpg",
           "repeat": 0,
           "boxes": 9,
-          "ms": 179.6887
+          "ms": 149.3957
         },
         {
           "image": "BDD16.jpg",
           "repeat": 0,
           "boxes": 4,
-          "ms": 181.0017
+          "ms": 153.3385
         },
         {
           "image": "BDD17.jpg",
           "repeat": 0,
           "boxes": 10,
-          "ms": 169.7547
+          "ms": 140.9824
         },
         {
           "image": "BDD18.jpg",
           "repeat": 0,
           "boxes": 12,
-          "ms": 191.7641
+          "ms": 141.4465
         },
         {
           "image": "BDD19.jpg",
           "repeat": 0,
           "boxes": 4,
-          "ms": 174.4296
+          "ms": 140.7147
         },
         {
           "image": "BDD20.jpg",
           "repeat": 0,
           "boxes": 14,
-          "ms": 180.0938
+          "ms": 141.7511
         },
         {
           "image": "BDD21.jpg",
           "repeat": 0,
           "boxes": 8,
-          "ms": 164.9745
+          "ms": 144.4869
         },
         {
           "image": "BDD22.jpg",
           "repeat": 0,
           "boxes": 0,
-          "ms": 165.4255
+          "ms": 143.5837
         },
         {
           "image": "BDD23.jpg",
           "repeat": 0,
           "boxes": 15,
-          "ms": 164.7007
+          "ms": 144.0905
         },
         {
           "image": "BDD24.jpg",
           "repeat": 0,
           "boxes": 13,
-          "ms": 169.2952
+          "ms": 149.016
         },
         {
           "image": "BDD25.jpg",
           "repeat": 0,
           "boxes": 11,
-          "ms": 167.0284
+          "ms": 232.3169
         },
         {
           "image": "BDD26.jpg",
           "repeat": 0,
           "boxes": 6,
-          "ms": 160.1649
+          "ms": 206.3017
         },
         {
           "image": "BDD01.jpg",
           "repeat": 1,
           "boxes": 9,
-          "ms": 166.1634
+          "ms": 182.7127
         },
         {
           "image": "BDD02.jpg",
           "repeat": 1,
           "boxes": 17,
-          "ms": 164.3709
+          "ms": 163.4653
         },
         {
           "image": "BDD03.jpg",
           "repeat": 1,
           "boxes": 9,
-          "ms": 168.6743
+          "ms": 308.0081
         },
         {
           "image": "BDD04.jpg",
           "repeat": 1,
           "boxes": 15,
-          "ms": 254.5745
+          "ms": 186.35
         },
         {
           "image": "BDD05.jpg",
           "repeat": 1,
           "boxes": 14,
-          "ms": 225.5592
+          "ms": 177.3285
         },
         {
           "image": "BDD06.jpg",
           "repeat": 1,
           "boxes": 4,
-          "ms": 230.6546
+          "ms": 188.361
         },
         {
           "image": "BDD07.jpg",
           "repeat": 1,
           "boxes": 16,
-          "ms": 213.632
+          "ms": 166.8975
         },
         {
           "image": "BDD08.jpg",
           "repeat": 1,
           "boxes": 12,
-          "ms": 204.7849
+          "ms": 158.3392
         },
         {
           "image": "BDD09.jpg",
           "repeat": 1,
           "boxes": 4,
-          "ms": 224.5511
+          "ms": 156.6314
         },
         {
           "image": "BDD10.jpg",
           "repeat": 1,
           "boxes": 13,
-          "ms": 306.857
+          "ms": 156.5346
         },
         {
           "image": "BDD11.jpg",
           "repeat": 1,
           "boxes": 13,
-          "ms": 195.3583
+          "ms": 156.3797
         },
         {
           "image": "BDD12.jpg",
           "repeat": 1,
           "boxes": 14,
-          "ms": 203.8822
+          "ms": 153.5635
         },
         {
           "image": "BDD13.jpg",
           "repeat": 1,
           "boxes": 12,
-          "ms": 312.5996
+          "ms": 145.0808
         },
         {
           "image": "BDD14.jpg",
           "repeat": 1,
           "boxes": 7,
-          "ms": 240.5991
+          "ms": 148.3339
         },
         {
           "image": "BDD15.jpg",
           "repeat": 1,
           "boxes": 9,
-          "ms": 211.7175
+          "ms": 150.8184
         },
         {
           "image": "BDD16.jpg",
           "repeat": 1,
           "boxes": 4,
-          "ms": 191.5721
+          "ms": 150.8343
         },
         {
           "image": "BDD17.jpg",
           "repeat": 1,
           "boxes": 10,
-          "ms": 333.7571
+          "ms": 146.5259
         },
         {
           "image": "BDD18.jpg",
           "repeat": 1,
           "boxes": 12,
-          "ms": 202.485
+          "ms": 142.5086
         },
         {
           "image": "BDD19.jpg",
           "repeat": 1,
           "boxes": 4,
-          "ms": 190.7097
+          "ms": 142.6866
         },
         {
           "image": "BDD20.jpg",
           "repeat": 1,
           "boxes": 14,
-          "ms": 175.3061
+          "ms": 137.4478
         },
         {
           "image": "BDD21.jpg",
           "repeat": 1,
           "boxes": 8,
-          "ms": 182.4183
+          "ms": 142.9465
         },
         {
           "image": "BDD22.jpg",
           "repeat": 1,
           "boxes": 0,
-          "ms": 249.1108
+          "ms": 142.7622
         },
         {
           "image": "BDD23.jpg",
           "repeat": 1,
           "boxes": 15,
-          "ms": 192.7998
+          "ms": 147.9978
         },
         {
           "image": "BDD24.jpg",
           "repeat": 1,
           "boxes": 13,
-          "ms": 176.7922
+          "ms": 144.5631
         },
         {
           "image": "BDD25.jpg",
           "repeat": 1,
           "boxes": 11,
-          "ms": 175.387
+          "ms": 136.3854
         },
         {
           "image": "BDD26.jpg",
           "repeat": 1,
           "boxes": 6,
-          "ms": 180.688
+          "ms": 135.5706
+        },
+        {
+          "image": "BDD01.jpg",
+          "repeat": 2,
+          "boxes": 9,
+          "ms": 140.8485
+        },
+        {
+          "image": "BDD02.jpg",
+          "repeat": 2,
+          "boxes": 17,
+          "ms": 142.4769
+        },
+        {
+          "image": "BDD03.jpg",
+          "repeat": 2,
+          "boxes": 9,
+          "ms": 142.7182
+        },
+        {
+          "image": "BDD04.jpg",
+          "repeat": 2,
+          "boxes": 15,
+          "ms": 143.9215
+        },
+        {
+          "image": "BDD05.jpg",
+          "repeat": 2,
+          "boxes": 14,
+          "ms": 145.8205
+        },
+        {
+          "image": "BDD06.jpg",
+          "repeat": 2,
+          "boxes": 4,
+          "ms": 141.995
+        },
+        {
+          "image": "BDD07.jpg",
+          "repeat": 2,
+          "boxes": 16,
+          "ms": 139.6238
+        },
+        {
+          "image": "BDD08.jpg",
+          "repeat": 2,
+          "boxes": 12,
+          "ms": 137.9281
+        },
+        {
+          "image": "BDD09.jpg",
+          "repeat": 2,
+          "boxes": 4,
+          "ms": 139.4129
+        },
+        {
+          "image": "BDD10.jpg",
+          "repeat": 2,
+          "boxes": 13,
+          "ms": 142.0327
+        },
+        {
+          "image": "BDD11.jpg",
+          "repeat": 2,
+          "boxes": 13,
+          "ms": 148.1609
+        },
+        {
+          "image": "BDD12.jpg",
+          "repeat": 2,
+          "boxes": 14,
+          "ms": 141.1073
+        },
+        {
+          "image": "BDD13.jpg",
+          "repeat": 2,
+          "boxes": 12,
+          "ms": 139.9221
+        },
+        {
+          "image": "BDD14.jpg",
+          "repeat": 2,
+          "boxes": 7,
+          "ms": 144.0204
+        },
+        {
+          "image": "BDD15.jpg",
+          "repeat": 2,
+          "boxes": 9,
+          "ms": 145.5544
+        },
+        {
+          "image": "BDD16.jpg",
+          "repeat": 2,
+          "boxes": 4,
+          "ms": 143.7551
+        },
+        {
+          "image": "BDD17.jpg",
+          "repeat": 2,
+          "boxes": 10,
+          "ms": 159.0427
+        },
+        {
+          "image": "BDD18.jpg",
+          "repeat": 2,
+          "boxes": 12,
+          "ms": 157.6375
+        },
+        {
+          "image": "BDD19.jpg",
+          "repeat": 2,
+          "boxes": 4,
+          "ms": 168.4475
+        },
+        {
+          "image": "BDD20.jpg",
+          "repeat": 2,
+          "boxes": 14,
+          "ms": 175.1902
+        },
+        {
+          "image": "BDD21.jpg",
+          "repeat": 2,
+          "boxes": 8,
+          "ms": 156.3232
+        },
+        {
+          "image": "BDD22.jpg",
+          "repeat": 2,
+          "boxes": 0,
+          "ms": 161.6377
+        },
+        {
+          "image": "BDD23.jpg",
+          "repeat": 2,
+          "boxes": 15,
+          "ms": 155.0054
+        },
+        {
+          "image": "BDD24.jpg",
+          "repeat": 2,
+          "boxes": 13,
+          "ms": 147.7571
+        },
+        {
+          "image": "BDD25.jpg",
+          "repeat": 2,
+          "boxes": 11,
+          "ms": 145.9543
+        },
+        {
+          "image": "BDD26.jpg",
+          "repeat": 2,
+          "boxes": 6,
+          "ms": 142.6584
         }
       ],
       "model_path": "D:\\Project\\M38-Edge-PreLabeling\\models\\raw\\yolov8s.pt",
       "model_sha256": "1268458ef67592ae5ce12f1667c4172863203cede9d9693aa4331383307ceff4"
     },
     "onnx": {
-      "mean_ms": 140.5772557692308,
-      "p50_ms": 127.25425000000001,
-      "p95_ms": 214.35939499999995,
-      "p99_ms": 229.512763,
-      "sequential_images_per_second": 7.113526256634166,
+      "mean_ms": 138.58486025641025,
+      "p50_ms": 126.03165,
+      "p95_ms": 222.78874499999972,
+      "p99_ms": 357.0925830000001,
+      "sequential_images_per_second": 7.215795420580546,
       "raw": [
         {
           "image": "BDD01.jpg",
           "repeat": 0,
           "boxes": 9,
-          "ms": 122.6188
+          "ms": 126.9951
         },
         {
           "image": "BDD02.jpg",
           "repeat": 0,
           "boxes": 17,
-          "ms": 133.1603
+          "ms": 115.3959
         },
         {
           "image": "BDD03.jpg",
           "repeat": 0,
           "boxes": 9,
-          "ms": 131.5324
+          "ms": 128.8537
         },
         {
           "image": "BDD04.jpg",
           "repeat": 0,
           "boxes": 15,
-          "ms": 132.6819
+          "ms": 110.8432
         },
         {
           "image": "BDD05.jpg",
           "repeat": 0,
           "boxes": 14,
-          "ms": 126.1018
+          "ms": 129.4429
         },
         {
           "image": "BDD06.jpg",
           "repeat": 0,
           "boxes": 4,
-          "ms": 122.4451
+          "ms": 118.6291
         },
         {
           "image": "BDD07.jpg",
           "repeat": 0,
           "boxes": 16,
-          "ms": 122.0812
+          "ms": 116.4197
         },
         {
           "image": "BDD08.jpg",
           "repeat": 0,
           "boxes": 12,
-          "ms": 122.3442
+          "ms": 109.7466
         },
         {
           "image": "BDD09.jpg",
           "repeat": 0,
           "boxes": 4,
-          "ms": 123.8214
+          "ms": 126.1212
         },
         {
           "image": "BDD10.jpg",
           "repeat": 0,
           "boxes": 13,
-          "ms": 142.8841
+          "ms": 118.5456
         },
         {
           "image": "BDD11.jpg",
           "repeat": 0,
           "boxes": 13,
-          "ms": 145.1115
+          "ms": 124.8688
         },
         {
           "image": "BDD12.jpg",
           "repeat": 0,
           "boxes": 14,
-          "ms": 142.2945
+          "ms": 128.1342
         },
         {
           "image": "BDD13.jpg",
           "repeat": 0,
           "boxes": 12,
-          "ms": 131.4306
+          "ms": 119.6366
         },
         {
           "image": "BDD14.jpg",
           "repeat": 0,
           "boxes": 7,
-          "ms": 128.4651
+          "ms": 110.0802
         },
         {
           "image": "BDD15.jpg",
           "repeat": 0,
           "boxes": 9,
-          "ms": 125.5083
+          "ms": 121.5311
         },
         {
           "image": "BDD16.jpg",
           "repeat": 0,
           "boxes": 4,
-          "ms": 120.4803
+          "ms": 117.4606
         },
         {
           "image": "BDD17.jpg",
           "repeat": 0,
           "boxes": 10,
-          "ms": 221.8653
+          "ms": 118.9815
         },
         {
           "image": "BDD18.jpg",
           "repeat": 0,
           "boxes": 12,
-          "ms": 231.2767
+          "ms": 125.0576
         },
         {
           "image": "BDD19.jpg",
           "repeat": 0,
           "boxes": 4,
-          "ms": 205.3351
+          "ms": 128.568
         },
         {
           "image": "BDD20.jpg",
           "repeat": 0,
           "boxes": 14,
-          "ms": 127.5186
+          "ms": 118.9457
         },
         {
           "image": "BDD21.jpg",
           "repeat": 0,
           "boxes": 8,
-          "ms": 227.818
+          "ms": 121.1932
         },
         {
           "image": "BDD22.jpg",
           "repeat": 0,
           "boxes": 0,
-          "ms": 208.2182
+          "ms": 126.2701
         },
         {
           "image": "BDD23.jpg",
           "repeat": 0,
           "boxes": 15,
-          "ms": 157.1603
+          "ms": 121.5492
         },
         {
           "image": "BDD24.jpg",
           "repeat": 0,
           "boxes": 13,
-          "ms": 165.9378
+          "ms": 107.0755
         },
         {
           "image": "BDD25.jpg",
           "repeat": 0,
           "boxes": 11,
-          "ms": 164.3733
+          "ms": 111.5996
         },
         {
           "image": "BDD26.jpg",
           "repeat": 0,
           "boxes": 6,
-          "ms": 147.9419
+          "ms": 112.7424
         },
         {
           "image": "BDD01.jpg",
           "repeat": 1,
           "boxes": 9,
-          "ms": 185.9833
+          "ms": 117.7959
         },
         {
           "image": "BDD02.jpg",
           "repeat": 1,
           "boxes": 17,
-          "ms": 172.4677
+          "ms": 126.6423
         },
         {
           "image": "BDD03.jpg",
           "repeat": 1,
           "boxes": 9,
-          "ms": 165.4051
+          "ms": 117.831
         },
         {
           "image": "BDD04.jpg",
           "repeat": 1,
           "boxes": 15,
-          "ms": 144.3938
+          "ms": 135.1424
         },
         {
           "image": "BDD05.jpg",
           "repeat": 1,
           "boxes": 14,
-          "ms": 125.2287
+          "ms": 122.7399
         },
         {
           "image": "BDD06.jpg",
           "repeat": 1,
           "boxes": 4,
-          "ms": 116.9762
+          "ms": 118.3429
         },
         {
           "image": "BDD07.jpg",
           "repeat": 1,
           "boxes": 16,
-          "ms": 112.0765
+          "ms": 131.1868
         },
         {
           "image": "BDD08.jpg",
           "repeat": 1,
           "boxes": 12,
-          "ms": 117.1145
+          "ms": 134.0837
         },
         {
           "image": "BDD09.jpg",
           "repeat": 1,
           "boxes": 4,
-          "ms": 117.6597
+          "ms": 141.5635
         },
         {
           "image": "BDD10.jpg",
           "repeat": 1,
           "boxes": 13,
-          "ms": 118.2731
+          "ms": 132.3682
         },
         {
           "image": "BDD11.jpg",
           "repeat": 1,
           "boxes": 13,
-          "ms": 116.1346
+          "ms": 151.5317
         },
         {
           "image": "BDD12.jpg",
           "repeat": 1,
           "boxes": 14,
-          "ms": 142.8186
+          "ms": 152.0508
         },
         {
           "image": "BDD13.jpg",
           "repeat": 1,
           "boxes": 12,
-          "ms": 124.2555
+          "ms": 166.5671
         },
         {
           "image": "BDD14.jpg",
           "repeat": 1,
           "boxes": 7,
-          "ms": 126.8895
+          "ms": 204.7289
         },
         {
           "image": "BDD15.jpg",
           "repeat": 1,
           "boxes": 9,
-          "ms": 128.0745
+          "ms": 350.6636
         },
         {
           "image": "BDD16.jpg",
           "repeat": 1,
           "boxes": 4,
-          "ms": 124.0878
+          "ms": 309.7643
         },
         {
           "image": "BDD17.jpg",
           "repeat": 1,
           "boxes": 10,
-          "ms": 126.9899
+          "ms": 378.6157
         },
         {
           "image": "BDD18.jpg",
           "repeat": 1,
           "boxes": 12,
-          "ms": 136.282
+          "ms": 248.4998
         },
         {
           "image": "BDD19.jpg",
           "repeat": 1,
           "boxes": 4,
-          "ms": 126.7015
+          "ms": 185.2741
         },
         {
           "image": "BDD20.jpg",
           "repeat": 1,
           "boxes": 14,
-          "ms": 125.3696
+          "ms": 129.5283
         },
         {
           "image": "BDD21.jpg",
           "repeat": 1,
           "boxes": 8,
-          "ms": 120.7852
+          "ms": 129.9998
         },
         {
           "image": "BDD22.jpg",
           "repeat": 1,
           "boxes": 0,
-          "ms": 112.9978
+          "ms": 130.2595
         },
         {
           "image": "BDD23.jpg",
           "repeat": 1,
           "boxes": 15,
-          "ms": 119.8911
+          "ms": 143.0673
         },
         {
           "image": "BDD24.jpg",
           "repeat": 1,
           "boxes": 13,
-          "ms": 121.9252
+          "ms": 141.2725
         },
         {
           "image": "BDD25.jpg",
           "repeat": 1,
           "boxes": 11,
-          "ms": 120.9892
+          "ms": 218.2515
         },
         {
           "image": "BDD26.jpg",
           "repeat": 1,
           "boxes": 6,
-          "ms": 129.84
+          "ms": 138.1697
+        },
+        {
+          "image": "BDD01.jpg",
+          "repeat": 2,
+          "boxes": 9,
+          "ms": 119.0563
+        },
+        {
+          "image": "BDD02.jpg",
+          "repeat": 2,
+          "boxes": 17,
+          "ms": 124.6905
+        },
+        {
+          "image": "BDD03.jpg",
+          "repeat": 2,
+          "boxes": 9,
+          "ms": 127.6645
+        },
+        {
+          "image": "BDD04.jpg",
+          "repeat": 2,
+          "boxes": 15,
+          "ms": 136.8968
+        },
+        {
+          "image": "BDD05.jpg",
+          "repeat": 2,
+          "boxes": 14,
+          "ms": 133.4586
+        },
+        {
+          "image": "BDD06.jpg",
+          "repeat": 2,
+          "boxes": 4,
+          "ms": 123.9687
+        },
+        {
+          "image": "BDD07.jpg",
+          "repeat": 2,
+          "boxes": 16,
+          "ms": 127.3649
+        },
+        {
+          "image": "BDD08.jpg",
+          "repeat": 2,
+          "boxes": 12,
+          "ms": 114.0258
+        },
+        {
+          "image": "BDD09.jpg",
+          "repeat": 2,
+          "boxes": 4,
+          "ms": 125.4363
+        },
+        {
+          "image": "BDD10.jpg",
+          "repeat": 2,
+          "boxes": 13,
+          "ms": 124.3738
+        },
+        {
+          "image": "BDD11.jpg",
+          "repeat": 2,
+          "boxes": 13,
+          "ms": 116.6401
+        },
+        {
+          "image": "BDD12.jpg",
+          "repeat": 2,
+          "boxes": 14,
+          "ms": 124.4013
+        },
+        {
+          "image": "BDD13.jpg",
+          "repeat": 2,
+          "boxes": 12,
+          "ms": 114.579
+        },
+        {
+          "image": "BDD14.jpg",
+          "repeat": 2,
+          "boxes": 7,
+          "ms": 115.0375
+        },
+        {
+          "image": "BDD15.jpg",
+          "repeat": 2,
+          "boxes": 9,
+          "ms": 117.9562
+        },
+        {
+          "image": "BDD16.jpg",
+          "repeat": 2,
+          "boxes": 4,
+          "ms": 133.6601
+        },
+        {
+          "image": "BDD17.jpg",
+          "repeat": 2,
+          "boxes": 10,
+          "ms": 131.0908
+        },
+        {
+          "image": "BDD18.jpg",
+          "repeat": 2,
+          "boxes": 12,
+          "ms": 124.2484
+        },
+        {
+          "image": "BDD19.jpg",
+          "repeat": 2,
+          "boxes": 4,
+          "ms": 116.5559
+        },
+        {
+          "image": "BDD20.jpg",
+          "repeat": 2,
+          "boxes": 14,
+          "ms": 136.1656
+        },
+        {
+          "image": "BDD21.jpg",
+          "repeat": 2,
+          "boxes": 8,
+          "ms": 125.9421
+        },
+        {
+          "image": "BDD22.jpg",
+          "repeat": 2,
+          "boxes": 0,
+          "ms": 135.2414
+        },
+        {
+          "image": "BDD23.jpg",
+          "repeat": 2,
+          "boxes": 15,
+          "ms": 111.6701
+        },
+        {
+          "image": "BDD24.jpg",
+          "repeat": 2,
+          "boxes": 13,
+          "ms": 122.3791
+        },
+        {
+          "image": "BDD25.jpg",
+          "repeat": 2,
+          "boxes": 11,
+          "ms": 126.6246
+        },
+        {
+          "image": "BDD26.jpg",
+          "repeat": 2,
+          "boxes": 6,
+          "ms": 129.8622
         }
       ],
       "model_path": "D:\\Project\\M38-Edge-PreLabeling\\models\\onnx\\yolov8s.onnx",
       "model_sha256": "89518584685db3d650f5a9d81df7ac99a8084784ef970f2474860ef1ad187453"
     },
     "openvino_fp16": {
-      "mean_ms": 204.6344423076923,
-      "p50_ms": 188.7554,
-      "p95_ms": 313.1479949999999,
-      "p99_ms": 345.9198340000001,
-      "sequential_images_per_second": 4.886762896425719,
+      "mean_ms": 119.77398205128205,
+      "p50_ms": 115.35705,
+      "p95_ms": 145.37172999999999,
+      "p99_ms": 158.87571000000008,
+      "sequential_images_per_second": 8.349058642567659,
       "raw": [
         {
           "image": "BDD01.jpg",
           "repeat": 0,
           "boxes": 9,
-          "ms": 235.7352
+          "ms": 110.3226
         },
         {
           "image": "BDD02.jpg",
           "repeat": 0,
           "boxes": 17,
-          "ms": 215.0188
+          "ms": 110.7718
         },
         {
           "image": "BDD03.jpg",
           "repeat": 0,
           "boxes": 9,
-          "ms": 251.8171
+          "ms": 110.01
         },
         {
           "image": "BDD04.jpg",
           "repeat": 0,
           "boxes": 15,
-          "ms": 246.2417
+          "ms": 107.7964
         },
         {
           "image": "BDD05.jpg",
           "repeat": 0,
           "boxes": 14,
-          "ms": 210.65
+          "ms": 120.3609
         },
         {
           "image": "BDD06.jpg",
           "repeat": 0,
           "boxes": 4,
-          "ms": 206.5382
+          "ms": 114.0889
         },
         {
           "image": "BDD07.jpg",
           "repeat": 0,
           "boxes": 16,
-          "ms": 201.312
+          "ms": 116.0876
         },
         {
           "image": "BDD08.jpg",
           "repeat": 0,
           "boxes": 12,
-          "ms": 222.396
+          "ms": 115.3905
         },
         {
           "image": "BDD09.jpg",
           "repeat": 0,
           "boxes": 4,
-          "ms": 322.1224
+          "ms": 113.9054
         },
         {
           "image": "BDD10.jpg",
           "repeat": 0,
           "boxes": 13,
-          "ms": 169.0578
+          "ms": 113.5733
         },
         {
           "image": "BDD11.jpg",
           "repeat": 0,
           "boxes": 13,
-          "ms": 282.5802
+          "ms": 117.8019
         },
         {
           "image": "BDD12.jpg",
           "repeat": 0,
           "boxes": 14,
-          "ms": 368.4907
+          "ms": 122.5138
         },
         {
           "image": "BDD13.jpg",
           "repeat": 0,
           "boxes": 12,
-          "ms": 305.8053
+          "ms": 118.7387
         },
         {
           "image": "BDD14.jpg",
           "repeat": 0,
           "boxes": 7,
-          "ms": 267.9145
+          "ms": 115.9933
         },
         {
           "image": "BDD15.jpg",
           "repeat": 0,
           "boxes": 9,
-          "ms": 239.9666
+          "ms": 114.2074
         },
         {
           "image": "BDD16.jpg",
           "repeat": 0,
           "boxes": 4,
-          "ms": 202.3863
+          "ms": 114.5748
         },
         {
           "image": "BDD17.jpg",
           "repeat": 0,
           "boxes": 11,
-          "ms": 218.3587
+          "ms": 125.0984
         },
         {
           "image": "BDD18.jpg",
           "repeat": 0,
           "boxes": 12,
-          "ms": 184.5574
+          "ms": 116.4469
         },
         {
           "image": "BDD19.jpg",
           "repeat": 0,
           "boxes": 4,
-          "ms": 207.8481
+          "ms": 122.2903
         },
         {
           "image": "BDD20.jpg",
           "repeat": 0,
           "boxes": 14,
-          "ms": 231.4732
+          "ms": 127.2107
         },
         {
           "image": "BDD21.jpg",
           "repeat": 0,
           "boxes": 8,
-          "ms": 292.9809
+          "ms": 121.2028
         },
         {
           "image": "BDD22.jpg",
           "repeat": 0,
           "boxes": 0,
-          "ms": 324.2341
+          "ms": 125.9561
         },
         {
           "image": "BDD23.jpg",
           "repeat": 0,
           "boxes": 15,
-          "ms": 243.0053
+          "ms": 127.9332
         },
         {
           "image": "BDD24.jpg",
           "repeat": 0,
           "boxes": 13,
-          "ms": 178.2563
+          "ms": 122.1238
         },
         {
           "image": "BDD25.jpg",
           "repeat": 0,
           "boxes": 11,
-          "ms": 174.4799
+          "ms": 129.6712
         },
         {
           "image": "BDD26.jpg",
           "repeat": 0,
           "boxes": 6,
-          "ms": 193.3049
+          "ms": 117.3822
         },
         {
           "image": "BDD01.jpg",
           "repeat": 1,
           "boxes": 9,
-          "ms": 249.4793
+          "ms": 108.5077
         },
         {
           "image": "BDD02.jpg",
           "repeat": 1,
           "boxes": 17,
-          "ms": 166.6991
+          "ms": 107.3779
         },
         {
           "image": "BDD03.jpg",
           "repeat": 1,
           "boxes": 9,
-          "ms": 171.1151
+          "ms": 111.6428
         },
         {
           "image": "BDD04.jpg",
           "repeat": 1,
           "boxes": 15,
-          "ms": 166.5183
+          "ms": 120.6544
         },
         {
           "image": "BDD05.jpg",
           "repeat": 1,
           "boxes": 14,
-          "ms": 163.1174
+          "ms": 112.4398
         },
         {
           "image": "BDD06.jpg",
           "repeat": 1,
           "boxes": 4,
-          "ms": 171.3605
+          "ms": 111.6273
         },
         {
           "image": "BDD07.jpg",
           "repeat": 1,
           "boxes": 16,
-          "ms": 168.9336
+          "ms": 109.8369
         },
         {
           "image": "BDD08.jpg",
           "repeat": 1,
           "boxes": 12,
-          "ms": 165.4326
+          "ms": 110.4679
         },
         {
           "image": "BDD09.jpg",
           "repeat": 1,
           "boxes": 4,
-          "ms": 160.8901
+          "ms": 111.6525
         },
         {
           "image": "BDD10.jpg",
           "repeat": 1,
           "boxes": 13,
-          "ms": 221.1416
+          "ms": 110.412
         },
         {
           "image": "BDD11.jpg",
           "repeat": 1,
           "boxes": 13,
-          "ms": 224.2327
+          "ms": 111.8128
         },
         {
           "image": "BDD12.jpg",
           "repeat": 1,
           "boxes": 14,
-          "ms": 192.9534
+          "ms": 110.5798
         },
         {
           "image": "BDD13.jpg",
           "repeat": 1,
           "boxes": 12,
-          "ms": 169.2138
+          "ms": 114.031
         },
         {
           "image": "BDD14.jpg",
           "repeat": 1,
           "boxes": 7,
-          "ms": 158.1465
+          "ms": 112.0593
         },
         {
           "image": "BDD15.jpg",
           "repeat": 1,
           "boxes": 9,
-          "ms": 157.2256
+          "ms": 110.8247
         },
         {
           "image": "BDD16.jpg",
           "repeat": 1,
           "boxes": 4,
-          "ms": 159.3235
+          "ms": 110.3248
         },
         {
           "image": "BDD17.jpg",
           "repeat": 1,
           "boxes": 11,
-          "ms": 167.944
+          "ms": 110.1877
         },
         {
           "image": "BDD18.jpg",
           "repeat": 1,
           "boxes": 12,
-          "ms": 166.594
+          "ms": 113.6804
         },
         {
           "image": "BDD19.jpg",
           "repeat": 1,
           "boxes": 4,
-          "ms": 152.7091
+          "ms": 114.0993
         },
         {
           "image": "BDD20.jpg",
           "repeat": 1,
           "boxes": 14,
-          "ms": 156.5906
+          "ms": 124.1691
         },
         {
           "image": "BDD21.jpg",
           "repeat": 1,
           "boxes": 8,
-          "ms": 147.7661
+          "ms": 115.845
         },
         {
           "image": "BDD22.jpg",
           "repeat": 1,
           "boxes": 0,
-          "ms": 158.8144
+          "ms": 119.7256
         },
         {
           "image": "BDD23.jpg",
           "repeat": 1,
           "boxes": 15,
-          "ms": 160.8327
+          "ms": 119.431
         },
         {
           "image": "BDD24.jpg",
           "repeat": 1,
           "boxes": 13,
-          "ms": 150.8286
+          "ms": 115.3236
         },
         {
           "image": "BDD25.jpg",
           "repeat": 1,
           "boxes": 11,
-          "ms": 162.4259
+          "ms": 126.3267
         },
         {
           "image": "BDD26.jpg",
           "repeat": 1,
           "boxes": 6,
-          "ms": 154.1709
+          "ms": 119.5228
+        },
+        {
+          "image": "BDD01.jpg",
+          "repeat": 2,
+          "boxes": 9,
+          "ms": 112.5191
+        },
+        {
+          "image": "BDD02.jpg",
+          "repeat": 2,
+          "boxes": 17,
+          "ms": 110.7868
+        },
+        {
+          "image": "BDD03.jpg",
+          "repeat": 2,
+          "boxes": 9,
+          "ms": 110.4968
+        },
+        {
+          "image": "BDD04.jpg",
+          "repeat": 2,
+          "boxes": 15,
+          "ms": 112.6853
+        },
+        {
+          "image": "BDD05.jpg",
+          "repeat": 2,
+          "boxes": 14,
+          "ms": 109.722
+        },
+        {
+          "image": "BDD06.jpg",
+          "repeat": 2,
+          "boxes": 4,
+          "ms": 112.5575
+        },
+        {
+          "image": "BDD07.jpg",
+          "repeat": 2,
+          "boxes": 16,
+          "ms": 113.0022
+        },
+        {
+          "image": "BDD08.jpg",
+          "repeat": 2,
+          "boxes": 12,
+          "ms": 112.7243
+        },
+        {
+          "image": "BDD09.jpg",
+          "repeat": 2,
+          "boxes": 4,
+          "ms": 109.1222
+        },
+        {
+          "image": "BDD10.jpg",
+          "repeat": 2,
+          "boxes": 13,
+          "ms": 112.7669
+        },
+        {
+          "image": "BDD11.jpg",
+          "repeat": 2,
+          "boxes": 13,
+          "ms": 110.7188
+        },
+        {
+          "image": "BDD12.jpg",
+          "repeat": 2,
+          "boxes": 14,
+          "ms": 135.3343
+        },
+        {
+          "image": "BDD13.jpg",
+          "repeat": 2,
+          "boxes": 12,
+          "ms": 172.9105
+        },
+        {
+          "image": "BDD14.jpg",
+          "repeat": 2,
+          "boxes": 7,
+          "ms": 130.2094
+        },
+        {
+          "image": "BDD15.jpg",
+          "repeat": 2,
+          "boxes": 9,
+          "ms": 154.6835
+        },
+        {
+          "image": "BDD16.jpg",
+          "repeat": 2,
+          "boxes": 4,
+          "ms": 138.2205
+        },
+        {
+          "image": "BDD17.jpg",
+          "repeat": 2,
+          "boxes": 11,
+          "ms": 138.5105
+        },
+        {
+          "image": "BDD18.jpg",
+          "repeat": 2,
+          "boxes": 12,
+          "ms": 128.7015
+        },
+        {
+          "image": "BDD19.jpg",
+          "repeat": 2,
+          "boxes": 4,
+          "ms": 145.1761
+        },
+        {
+          "image": "BDD20.jpg",
+          "repeat": 2,
+          "boxes": 14,
+          "ms": 134.3567
+        },
+        {
+          "image": "BDD21.jpg",
+          "repeat": 2,
+          "boxes": 8,
+          "ms": 130.2531
+        },
+        {
+          "image": "BDD22.jpg",
+          "repeat": 2,
+          "boxes": 0,
+          "ms": 149.0738
+        },
+        {
+          "image": "BDD23.jpg",
+          "repeat": 2,
+          "boxes": 15,
+          "ms": 140.1569
+        },
+        {
+          "image": "BDD24.jpg",
+          "repeat": 2,
+          "boxes": 13,
+          "ms": 146.4803
+        },
+        {
+          "image": "BDD25.jpg",
+          "repeat": 2,
+          "boxes": 11,
+          "ms": 120.4516
+        },
+        {
+          "image": "BDD26.jpg",
+          "repeat": 2,
+          "boxes": 6,
+          "ms": 116.7343
         }
       ],
       "model_path": "D:\\Project\\M38-Edge-PreLabeling\\models\\openvino_fp16\\yolov8s_fp16.xml",
       "model_sha256": "abfcdbca70440416302e5c346d34b0c48fb6c3b578523eaf6e3dae88b035e01d"
     },
     "openvino_int8": {
-      "mean_ms": 57.68392884615385,
-      "p50_ms": 56.7298,
-      "p95_ms": 66.008615,
-      "p99_ms": 73.06033700000002,
-      "sequential_images_per_second": 17.335851076771384,
+      "mean_ms": 38.79773846153847,
+      "p50_ms": 38.65755,
+      "p95_ms": 42.054064999999994,
+      "p99_ms": 43.480893,
+      "sequential_images_per_second": 25.774698208024013,
       "raw": [
         {
           "image": "BDD01.jpg",
           "repeat": 0,
           "boxes": 9,
-          "ms": 61.9815
+          "ms": 40.7451
         },
         {
           "image": "BDD02.jpg",
           "repeat": 0,
           "boxes": 18,
-          "ms": 56.8229
+          "ms": 40.622
         },
         {
           "image": "BDD03.jpg",
           "repeat": 0,
           "boxes": 9,
-          "ms": 54.4293
+          "ms": 39.5972
         },
         {
           "image": "BDD04.jpg",
           "repeat": 0,
           "boxes": 16,
-          "ms": 65.9291
+          "ms": 38.6592
         },
         {
           "image": "BDD05.jpg",
           "repeat": 0,
           "boxes": 15,
-          "ms": 66.1058
+          "ms": 38.965
         },
         {
           "image": "BDD06.jpg",
           "repeat": 0,
           "boxes": 4,
-          "ms": 55.4639
+          "ms": 39.9285
         },
         {
           "image": "BDD07.jpg",
           "repeat": 0,
           "boxes": 19,
-          "ms": 63.4474
+          "ms": 39.0376
         },
         {
           "image": "BDD08.jpg",
           "repeat": 0,
           "boxes": 11,
-          "ms": 55.9206
+          "ms": 40.7726
         },
         {
           "image": "BDD09.jpg",
           "repeat": 0,
           "boxes": 4,
-          "ms": 59.4435
+          "ms": 36.6906
         },
         {
           "image": "BDD10.jpg",
           "repeat": 0,
           "boxes": 12,
-          "ms": 63.7195
+          "ms": 39.5611
         },
         {
           "image": "BDD11.jpg",
           "repeat": 0,
           "boxes": 14,
-          "ms": 55.195
+          "ms": 37.0325
         },
         {
           "image": "BDD12.jpg",
           "repeat": 0,
           "boxes": 15,
-          "ms": 54.7739
+          "ms": 41.4951
         },
         {
           "image": "BDD13.jpg",
           "repeat": 0,
           "boxes": 16,
-          "ms": 50.3735
+          "ms": 39.7902
         },
         {
           "image": "BDD14.jpg",
           "repeat": 0,
           "boxes": 8,
-          "ms": 58.1613
+          "ms": 38.2078
         },
         {
           "image": "BDD15.jpg",
           "repeat": 0,
           "boxes": 9,
-          "ms": 54.9445
+          "ms": 38.3213
         },
         {
           "image": "BDD16.jpg",
           "repeat": 0,
           "boxes": 4,
-          "ms": 55.315
+          "ms": 39.0167
         },
         {
           "image": "BDD17.jpg",
           "repeat": 0,
           "boxes": 12,
-          "ms": 56.6367
+          "ms": 39.8522
         },
         {
           "image": "BDD18.jpg",
           "repeat": 0,
           "boxes": 11,
-          "ms": 58.176
+          "ms": 44.3349
         },
         {
           "image": "BDD19.jpg",
           "repeat": 0,
           "boxes": 4,
-          "ms": 62.3173
+          "ms": 40.6565
         },
         {
           "image": "BDD20.jpg",
           "repeat": 0,
           "boxes": 14,
-          "ms": 59.9663
+          "ms": 41.7382
         },
         {
           "image": "BDD21.jpg",
           "repeat": 0,
           "boxes": 10,
-          "ms": 54.4493
+          "ms": 36.9939
         },
         {
           "image": "BDD22.jpg",
           "repeat": 0,
           "boxes": 0,
-          "ms": 54.8665
+          "ms": 37.6741
         },
         {
           "image": "BDD23.jpg",
           "repeat": 0,
           "boxes": 17,
-          "ms": 58.4791
+          "ms": 38.1362
         },
         {
           "image": "BDD24.jpg",
           "repeat": 0,
           "boxes": 13,
-          "ms": 59.9902
+          "ms": 37.3083
         },
         {
           "image": "BDD25.jpg",
           "repeat": 0,
           "boxes": 10,
-          "ms": 76.1516
+          "ms": 41.2327
         },
         {
           "image": "BDD26.jpg",
           "repeat": 0,
           "boxes": 6,
-          "ms": 57.1483
+          "ms": 38.9938
         },
         {
           "image": "BDD01.jpg",
           "repeat": 1,
           "boxes": 9,
-          "ms": 56.388
+          "ms": 37.6562
         },
         {
           "image": "BDD02.jpg",
           "repeat": 1,
           "boxes": 18,
-          "ms": 52.9893
+          "ms": 38.3547
         },
         {
           "image": "BDD03.jpg",
           "repeat": 1,
           "boxes": 9,
-          "ms": 61.301
+          "ms": 37.1971
         },
         {
           "image": "BDD04.jpg",
           "repeat": 1,
           "boxes": 16,
-          "ms": 60.313
+          "ms": 36.4918
         },
         {
           "image": "BDD05.jpg",
           "repeat": 1,
           "boxes": 15,
-          "ms": 59.1274
+          "ms": 40.3295
         },
         {
           "image": "BDD06.jpg",
           "repeat": 1,
           "boxes": 4,
-          "ms": 56.0121
+          "ms": 43.2258
         },
         {
           "image": "BDD07.jpg",
           "repeat": 1,
           "boxes": 19,
-          "ms": 50.9741
+          "ms": 42.4171
         },
         {
           "image": "BDD08.jpg",
           "repeat": 1,
           "boxes": 11,
-          "ms": 53.3358
+          "ms": 36.2778
         },
         {
           "image": "BDD09.jpg",
           "repeat": 1,
           "boxes": 4,
-          "ms": 53.7753
+          "ms": 36.5772
         },
         {
           "image": "BDD10.jpg",
           "repeat": 1,
           "boxes": 12,
-          "ms": 54.3733
+          "ms": 38.6587
         },
         {
           "image": "BDD11.jpg",
           "repeat": 1,
           "boxes": 14,
-          "ms": 53.5692
+          "ms": 37.573
         },
         {
           "image": "BDD12.jpg",
           "repeat": 1,
           "boxes": 15,
-          "ms": 61.359
+          "ms": 39.3664
         },
         {
           "image": "BDD13.jpg",
           "repeat": 1,
           "boxes": 16,
-          "ms": 51.1563
+          "ms": 40.1093
         },
         {
           "image": "BDD14.jpg",
           "repeat": 1,
           "boxes": 8,
-          "ms": 57.9368
+          "ms": 37.6722
         },
         {
           "image": "BDD15.jpg",
           "repeat": 1,
           "boxes": 9,
-          "ms": 56.853
+          "ms": 38.7812
         },
         {
           "image": "BDD16.jpg",
           "repeat": 1,
           "boxes": 4,
-          "ms": 54.7432
+          "ms": 36.6736
         },
         {
           "image": "BDD17.jpg",
           "repeat": 1,
           "boxes": 12,
-          "ms": 63.4291
+          "ms": 36.3643
         },
         {
           "image": "BDD18.jpg",
           "repeat": 1,
           "boxes": 11,
-          "ms": 52.3722
+          "ms": 39.0324
         },
         {
           "image": "BDD19.jpg",
           "repeat": 1,
           "boxes": 4,
-          "ms": 59.8623
+          "ms": 36.8004
         },
         {
           "image": "BDD20.jpg",
           "repeat": 1,
           "boxes": 14,
-          "ms": 51.9789
+          "ms": 40.268
         },
         {
           "image": "BDD21.jpg",
           "repeat": 1,
           "boxes": 10,
-          "ms": 58.575
+          "ms": 40.4373
         },
         {
           "image": "BDD22.jpg",
           "repeat": 1,
           "boxes": 0,
-          "ms": 56.354
+          "ms": 37.1551
         },
         {
           "image": "BDD23.jpg",
           "repeat": 1,
           "boxes": 17,
-          "ms": 50.4631
+          "ms": 37.5129
         },
         {
           "image": "BDD24.jpg",
           "repeat": 1,
           "boxes": 13,
-          "ms": 70.0903
+          "ms": 38.6539
         },
         {
           "image": "BDD25.jpg",
           "repeat": 1,
           "boxes": 10,
-          "ms": 57.7847
+          "ms": 42.7797
         },
         {
           "image": "BDD26.jpg",
           "repeat": 1,
           "boxes": 6,
-          "ms": 54.2399
+          "ms": 39.5761
+        },
+        {
+          "image": "BDD01.jpg",
+          "repeat": 2,
+          "boxes": 9,
+          "ms": 39.8179
+        },
+        {
+          "image": "BDD02.jpg",
+          "repeat": 2,
+          "boxes": 18,
+          "ms": 38.6564
+        },
+        {
+          "image": "BDD03.jpg",
+          "repeat": 2,
+          "boxes": 9,
+          "ms": 38.6825
+        },
+        {
+          "image": "BDD04.jpg",
+          "repeat": 2,
+          "boxes": 16,
+          "ms": 37.2621
+        },
+        {
+          "image": "BDD05.jpg",
+          "repeat": 2,
+          "boxes": 15,
+          "ms": 37.7125
+        },
+        {
+          "image": "BDD06.jpg",
+          "repeat": 2,
+          "boxes": 4,
+          "ms": 37.6667
+        },
+        {
+          "image": "BDD07.jpg",
+          "repeat": 2,
+          "boxes": 19,
+          "ms": 41.1513
+        },
+        {
+          "image": "BDD08.jpg",
+          "repeat": 2,
+          "boxes": 11,
+          "ms": 39.5285
+        },
+        {
+          "image": "BDD09.jpg",
+          "repeat": 2,
+          "boxes": 4,
+          "ms": 41.99
+        },
+        {
+          "image": "BDD10.jpg",
+          "repeat": 2,
+          "boxes": 12,
+          "ms": 37.8617
+        },
+        {
+          "image": "BDD11.jpg",
+          "repeat": 2,
+          "boxes": 14,
+          "ms": 38.2282
+        },
+        {
+          "image": "BDD12.jpg",
+          "repeat": 2,
+          "boxes": 15,
+          "ms": 41.2609
+        },
+        {
+          "image": "BDD13.jpg",
+          "repeat": 2,
+          "boxes": 16,
+          "ms": 38.4554
+        },
+        {
+          "image": "BDD14.jpg",
+          "repeat": 2,
+          "boxes": 8,
+          "ms": 36.1079
+        },
+        {
+          "image": "BDD15.jpg",
+          "repeat": 2,
+          "boxes": 9,
+          "ms": 35.947
+        },
+        {
+          "image": "BDD16.jpg",
+          "repeat": 2,
+          "boxes": 4,
+          "ms": 37.9994
+        },
+        {
+          "image": "BDD17.jpg",
+          "repeat": 2,
+          "boxes": 12,
+          "ms": 35.3016
+        },
+        {
+          "image": "BDD18.jpg",
+          "repeat": 2,
+          "boxes": 11,
+          "ms": 36.7184
+        },
+        {
+          "image": "BDD19.jpg",
+          "repeat": 2,
+          "boxes": 4,
+          "ms": 38.065
+        },
+        {
+          "image": "BDD20.jpg",
+          "repeat": 2,
+          "boxes": 14,
+          "ms": 37.6217
+        },
+        {
+          "image": "BDD21.jpg",
+          "repeat": 2,
+          "boxes": 10,
+          "ms": 39.3396
+        },
+        {
+          "image": "BDD22.jpg",
+          "repeat": 2,
+          "boxes": 0,
+          "ms": 36.6125
+        },
+        {
+          "image": "BDD23.jpg",
+          "repeat": 2,
+          "boxes": 17,
+          "ms": 36.7802
+        },
+        {
+          "image": "BDD24.jpg",
+          "repeat": 2,
+          "boxes": 13,
+          "ms": 37.6345
+        },
+        {
+          "image": "BDD25.jpg",
+          "repeat": 2,
+          "boxes": 10,
+          "ms": 39.5306
+        },
+        {
+          "image": "BDD26.jpg",
+          "repeat": 2,
+          "boxes": 6,
+          "ms": 38.9861
         }
       ],
       "model_path": "D:\\Project\\M38-Edge-PreLabeling\\models\\openvino_int8_rgb\\yolov8s_int8.xml",

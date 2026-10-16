@@ -9,16 +9,11 @@ from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 from pathlib import Path
 from urllib.parse import urlparse, parse_qs, unquote
 import cv2
+from src.core.inference.factory import MODELS as MODEL_PATHS, make_engine
 
 ROOT = Path(__file__).resolve().parents[2]
 WEB_ROOT = ROOT / 'docs'
 SAMPLE_ROOT = ROOT / 'data/sample_images'
-MODEL_PATHS = {
-    'torch': 'models/raw/yolov8s.pt',
-    'onnx': 'models/onnx/yolov8s.onnx',
-    'openvino_fp16': 'models/openvino_fp16/yolov8s_fp16.xml',
-    'openvino_int8': 'models/openvino_int8_rgb/yolov8s_int8.xml',
-}
 CACHED_ENGINES = {}
 ENGINE_LOCK = threading.Lock()
 
@@ -27,13 +22,7 @@ def get_engine(runtime):
     if runtime not in MODEL_PATHS:
         raise ValueError('Unknown runtime')
     if runtime not in CACHED_ENGINES:
-        if runtime == 'torch':
-            from src.core.inference.torch_engine import TorchInferenceEngine as Engine
-        elif runtime == 'onnx':
-            from src.core.inference.onnx_engine import ONNXInferenceEngine as Engine
-        else:
-            from src.core.inference.ov_engine import OpenVINOInferenceEngine as Engine
-        CACHED_ENGINES[runtime] = Engine(str(ROOT / MODEL_PATHS[runtime]))
+        CACHED_ENGINES[runtime] = make_engine(runtime)
     return CACHED_ENGINES[runtime]
 
 
@@ -128,7 +117,9 @@ class WebMVPHandler(BaseHTTPRequestHandler):
                 detections = engine.predict(image)
                 elapsed = (time.perf_counter()-start)*1000
             from src.core.benchmark.memory import MemoryBenchmark
+            import hashlib
             self._send_json({'image_name':path.name,'width':image.shape[1],'height':image.shape[0],
+                'image_sha256':hashlib.sha256(path.read_bytes()).hexdigest(),
                 'runtime':runtime,'conf':conf,'latency_ms':round(elapsed,2),
                 'model_size_mb':MemoryBenchmark.get_model_size_mb(engine.model_path),
                 'detections':[{'class_name':d.class_name,'class_id':d.class_id,

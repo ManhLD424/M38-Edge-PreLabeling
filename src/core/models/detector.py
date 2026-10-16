@@ -35,6 +35,10 @@ class PointPillarsDetector:
         self.model = None
         self._try_load_model()
 
+    @property
+    def backend(self):
+        return 'pointpillars_checkpoint' if self.model is not None else 'experimental_geometry_heuristic'
+
     def _try_load_model(self) -> None:
         """Attempts to load PyTorch PointPillars checkpoint if available."""
         if not self.config.checkpoint_path:
@@ -79,6 +83,9 @@ class PointPillarsDetector:
         Returns:
             List of detected 3D Cuboids in scan coordinate frame.
         """
+        points = np.asarray(points)
+        if points.ndim != 2 or points.shape[1] not in (3,4):
+            raise ValueError('Expected a point cloud of shape [N,3] or [N,4]')
         if len(points) == 0:
             return []
 

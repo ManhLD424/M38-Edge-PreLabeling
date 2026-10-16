@@ -2,6 +2,7 @@ export const BDD_LABELS=['pedestrian','rider','car','truck','bus','train','motor
 export const COCO_LABELS=["person", "bicycle", "car", "motorcycle", "airplane", "bus", "train", "truck", "boat", "traffic light", "fire hydrant", "stop sign", "parking meter", "bench", "bird", "cat", "dog", "horse", "sheep", "cow", "elephant", "bear", "zebra", "giraffe", "backpack", "umbrella", "handbag", "tie", "suitcase", "frisbee", "skis", "snowboard", "sports ball", "kite", "baseball bat", "baseball glove", "skateboard", "surfboard", "tennis racket", "bottle", "wine glass", "cup", "fork", "knife", "spoon", "bowl", "banana", "apple", "sandwich", "orange", "broccoli", "carrot", "hot dog", "pizza", "donut", "cake", "chair", "couch", "potted plant", "bed", "dining table", "toilet", "tv", "laptop", "mouse", "remote", "keyboard", "cell phone", "microwave", "oven", "toaster", "sink", "refrigerator", "book", "clock", "vase", "scissors", "teddy bear", "hair drier", "toothbrush"];
 const TRAFFIC=new Set([0,1,2,3,5,6,7,9,11]);
 export const labelFor=(name)=>name==='person'?'pedestrian':name==='stop sign'?'traffic sign':name;
+export const exportLabel=(box,scope)=>scope==='all'||box.edited?box.class_name:labelFor(box.class_name);
 export function visibleBoxes(boxes,confidence,scope){
   return boxes.filter(b=>(b.edited || b.confidence>=confidence) && (scope==='all'||b.edited||TRAFFIC.has(b.class_id)));
 }
@@ -37,7 +38,7 @@ export function decodeYolo(data,count,geometry,confidence=.1,overlap=.45){
 }
 export const escapeXml=value=>String(value).replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&apos;'}[c]));
 export function toCvatXml(records){
-  const labels=[...new Set(records.flatMap(r=>r.boxes.map(b=>labelFor(b.class_name))))].sort();
+  const labels=[...new Set(records.flatMap(r=>r.boxes.map(b=>exportLabel(b,r.scope))))].sort();
   let xml='<?xml version="1.0" encoding="utf-8"?>\n<annotations><version>1.1</version><meta><task><name>M38 reviewed prelabels</name>';
   xml+=`<size>${records.length}</size><mode>annotation</mode><labels>`;
   xml+=labels.map(l=>`<label><name>${escapeXml(l)}</name><type>rectangle</type><attributes/></label>`).join('');
@@ -48,7 +49,7 @@ export function toCvatXml(records){
     r.boxes.forEach(b=>{
       const [x1,y1,x2,y2]=b.box_xyxy;
       if(![x1,y1,x2,y2].every(Number.isFinite)||!(0<=x1&&x1<x2&&x2<=r.width&&0<=y1&&y1<y2&&y2<=r.height))throw new Error('Invalid box');
-      xml+=`<box label="${escapeXml(labelFor(b.class_name))}" occluded="0" source="${b.edited?'manual':'auto'}" xtl="${x1}" ytl="${y1}" xbr="${x2}" ybr="${y2}" z_order="0"/>`;
+      xml+=`<box label="${escapeXml(exportLabel(b,r.scope))}" occluded="0" source="${b.edited?'manual':'auto'}" xtl="${x1}" ytl="${y1}" xbr="${x2}" ybr="${y2}" z_order="0"/>`;
     });xml+='</image>';
   });return xml+'</annotations>';
 }

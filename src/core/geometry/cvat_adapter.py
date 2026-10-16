@@ -38,17 +38,19 @@ class CVAT3DAdapter:
             "attributes": []
         }
 
-    def to_shapes_payload(self, cuboids: List[Cuboid3D], frame: int = 0) -> Dict[str, Any]:
+    def to_shapes_payload(self, cuboids: List[Cuboid3D], frame: int = 0, version: Optional[int] = None) -> Dict[str, Any]:
         """Wraps cuboid shapes into standard CVAT job patch payload."""
         shapes = [self.to_shape_dict(c, frame=frame) for c in cuboids]
-        return {
-            "version": 0,
+        payload = {
             "tags": [],
             "shapes": shapes,
             "tracks": []
         }
+        if version is not None:
+            payload['version'] = version
+        return payload
 
-    def to_tracks_payload(self, cuboids_by_frame: Dict[int, List[Cuboid3D]]) -> Dict[str, Any]:
+    def to_tracks_payload(self, cuboids_by_frame: Dict[int, List[Cuboid3D]], version: Optional[int] = None) -> Dict[str, Any]:
         """Generates sequence tracks payload (compatible with CVAT-3D-Copilot extension)."""
         tracks = []
         if len(cuboids_by_frame) > 1:
@@ -77,12 +79,14 @@ class CVAT3DAdapter:
                     ]
                 })
 
-        return {
-            "version": 0,
+        payload = {
             "tags": [],
             "shapes": [],
             "tracks": tracks
         }
+        if version is not None:
+            payload['version'] = version
+        return payload
 
     @staticmethod
     def parse_cvat_annotations(data: Dict[str, Any], id_to_label: Optional[Dict[int, str]] = None) -> List[Cuboid3D]:

@@ -1,60 +1,30 @@
-# BÁO CÁO KIỂM THỬ TỰ ĐỘNG & BẢO ĐẢM CHẤT LƯỢNG (TESTING REPORT)
-## Đề tài P030 — M38: Model Compression for Edge Pre-Labeling
+# Testing report — repair 2026-10-16
 
-> **Trạng thái:** ✅ **20/20 Test Cases Passed (100% Pass Rate)**  
-> **Thời gian thực thi:** 2.61 giây  
-> **Framework kiểm thử:** `pytest 9.1.1` trên Python 3.12.10 (Windows 11 x64)
+Local environment: Python 3.12.10, Windows, exact direct dependency versions in requirements.txt. This is a record of executed checks, not 100% source coverage or a production certification.
 
----
+## Automated checks
 
-## 1. TỔNG QUAN CÁC HẠNG MỤC KIỂM THỬ (TEST MATRIX)
+- Python suite covers existing geometry/PCD/dataclasses plus RGB input, class-aware NMS, malformed API requests, path containment, response image hashes, heuristic threshold/rear pass, explicit ontology/checkpoint failures, artifact preservation and actual packaged ONNX inference.
+- COCO evaluator tests use synthetic human-GT-shaped fixtures for perfect/empty predictions; these prove evaluator wiring, not detector quality.
+- JS tests cover class-aware decoding, missing-image replay failure, exact filtered XML/escaping and stale request generations.
+- Artifact validator checks 26 images x 4 runtimes, per-image hashes, box bounds, split disjointness and model/vendor fingerprints.
+- Canonical LF regression addresses the Windows/Linux license-file hash mismatch found in the GitHub verify job.
 
-Hệ thống được kiểm thử tự động toàn diện qua 6 module độc lập, bao phủ toàn bộ vòng đời từ tiền xử lý, tính toán hình học, suy luận đa runtime, lượng tử hóa đến đóng gói payload CVAT:
+Commands and final counts are recorded in REPAIR_2026-10-16.md. CI has not yet validated the final uncommitted patch; its older revision failed vendor provenance validation, while the separate built-in Pages job published.
 
-| Module kiểm thử | Số lượng test | Mục tiêu kiểm định | Kết quả |
-| :--- | :---: | :--- | :---: |
-| `tests/test_accuracy_bench.py` | 4 tests | Kiểm tra thuật toán tính IoU, bipartite matching, độ chính xác mAP@50 và tính toán mAP drop | **PASSED** |
-| `tests/test_prelabel_2d.py` | 2 tests | Kiểm tra ánh xạ nhãn COCO sang BDD100K 10 lớp và chuẩn hóa định dạng CVAT 2D Rectangle | **PASSED** |
-| `tests/test_inference.py` | 1 test | Kiểm tra cấu trúc `Detection` dataclass, trích xuất `box_xyxy` và `box_cvat` | **PASSED** |
-| `tests/test_cuboid_geometry.py` | 4 tests | Kiểm tra 8 góc đỉnh 3D, kiểm tra góc xoay Yaw, loại bỏ hộp đè lấn (`merge_boxes`) | **PASSED** |
-| `tests/test_pcd_io.py` | 4 tests | Kiểm tra nạp file PCD Binary v0.7, ước lượng mặt đất $Z_{ground}$, biến đổi cao độ hệ quy chiếu | **PASSED** |
-| `tests/test_cvat_adapter.py` | 3 tests | Kiểm tra đóng gói 16-point CVAT 3D shapes payload, tracks sequence payload và parse ngược | **PASSED** |
-| `tests/test_detector.py` | 2 tests | Kiểm tra suy luận trên demo pointcloud và kiểm tra bộ đo benchmark 3D | **PASSED** |
-| **TỔNG CỘNG** | **20 tests** | **Bảo đảm tính toàn vẹn 100% mã nguồn** | **100% GREEN** |
+## Executed runtime checks
 
----
+- Real Python engines on 26 images; controlled consistency on 10 held-out images.
+- CPU timing on 26 real images, 3 repeats, thread budget 4, raw logs versioned.
+- Compression smoke: fresh output directory, checkpoint -> ONNX -> OV FP16 -> recalibrated INT8, old artifacts preserved.
+- Current local API: all four engines return 200 with the exact requested image hash/dimensions.
+- Browser localhost: real ONNX inference, numeric box edit, review and XML export.
+- Public Pages: real ONNX inference on BDD06, distinct image-specific FP16 replay, confidence .90 -> zero visible/exported boxes; stale-response navigation checked separately.
 
-## 2. CHI TIẾT CÁC TEST CASES
+## Not established
 
-### 2.1. Module Đánh giá Độ chính xác & Sai lệch (`test_accuracy_bench.py`)
-- `test_compute_iou_identical`: Xác minh IoU giữa 2 hộp trùng khớp hoàn toàn bằng $1.000$.
-- `test_compute_iou_no_overlap`: Xác minh IoU giữa 2 hộp không giao nhau bằng $0.000$.
-- `test_compute_iou_partial_overlap`: Xác minh công thức toán học $IoU = \frac{A \cap B}{A \cup B}$ với diện tích giao 50 và hợp 150 $\rightarrow 0.333$.
-- `test_accuracy_benchmark_evaluation`: Đánh giá end-to-end trên dữ liệu mẫu với Dummy Engine, xác nhận tính toán đúng mAP@50 và mAP drop.
+Authenticated CVAT import/save/reload, human-GT BDD AP/drop, independent driving-scene holdout, annotator productivity, cold full dependency install, mobile/cross-browser matrix and final CI/public rollout of the last hardening patch. Session JSON export does not currently have a session-import workflow.
 
-### 2.2. Module Tiền gán nhãn 2D & CVAT Mapping (`test_prelabel_2d.py`)
-- `test_coco_to_bdd_mapping`: Xác minh ánh xạ chính xác các nhãn COCO cốt lõi (`person` $\rightarrow$ `pedestrian`, `car` $\rightarrow$ `car`, `truck` $\rightarrow$ `truck`, `stop sign` $\rightarrow$ `traffic sign`).
-- `test_cvat_box_format_structure`: Xác minh payload xuất ra tuân thủ chính xác schema REST API của CVAT Server (tọa độ `[xtl, ytl, xbr, ybr]`, `label`, `confidence`, `occluded`).
+## Follow-up checks
 
-### 2.3. Module Đọc/Ghi Dữ liệu & Biến đổi Hình học (`test_pcd_io.py`, `test_cuboid_geometry.py`)
-- `test_read_demo_pcd`: Đọc thành công file PCD Binary v0.7 gồm 17,238 điểm LiDAR mà không bị tràn số.
-- `test_estimate_ground`: Thuật toán ước lượng cao độ mặt đất $Z_{ground} = 0.075\text{ m}$ khớp với mặt phẳng đường thực tế.
-- `test_height_coordinate_transformation`: Chuyển đổi qua lại giữa hệ tọa độ cảm biến quét ($Z_{source}$) và hệ tọa độ mô hình ($Z_{model}$) không bị sai lệch số học.
-- `test_drop_boxes_on_cars`: Thuật toán lọc bỏ các bounding box người đi bộ ảo xuất hiện trên nóc xe hơi.
-
----
-
-## 3. LỆNH CHẠY KIỂM THỬ (TEST REPRODUCTION)
-
-```bash
-# Chạy toàn bộ 20 test cases với thông tin chi tiết
-python -m pytest tests -v
-
-# Kết quả kiểm thử chuẩn:
-# tests/test_accuracy_bench.py::test_compute_iou_identical PASSED          [  5%]
-# tests/test_accuracy_bench.py::test_compute_iou_no_overlap PASSED         [ 10%]
-# tests/test_accuracy_bench.py::test_compute_iou_partial_overlap PASSED    [ 15%]
-# tests/test_accuracy_bench.py::test_accuracy_benchmark_evaluation PASSED  [ 20%]
-# ...
-# ============================= 20 passed in 2.61s ==============================
-```
+50 Python tests pass after explicit CVAT revision/authentication guards and pytest collection scope were added. Datumaro 1.13.11 independently imported four Python/browser XML fixture datasets, including the zero-box case. This verifies format compatibility only. Reproduce with an isolated Datumaro environment and `python tools/verify_cvat_export.py --parser-python <environment-python>`.

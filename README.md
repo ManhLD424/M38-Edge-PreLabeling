@@ -37,7 +37,7 @@ python -m src.cli.main prelabel-2d --source data/sample_images/BDD06.jpg --model
 python -m src.cli.main info
 ```
 
-Compress không ghi đè output-root đã tồn tại. Chọn model mới rõ ràng khi prelabel; không tự chuyển runtime đang serve. CPU local dùng đường dẫn trong src/core/inference/factory.py; M38_CPU_THREADS mặc định 4. Model fetch kiểm tra SHA checkpoint tạo replay, mismatch sẽ dừng. Split 16 calibration / 10 holdout đóng băng bằng hash chỉ là split ảnh minh họa; chưa có scene provenance hay human GT.
+Compress không ghi đè output-root đã tồn tại. Chọn model mới rõ ràng khi prelabel; không tự chuyển runtime đang serve. CPU local dùng đường dẫn trong src/core/inference/factory.py; M38_CPU_THREADS mặc định 4. Model fetch kiểm tra byte SHA hoặc fingerprint tensor tham số; serialization/metadata khác được thông báo rõ và chỉ chấp nhận nếu toàn bộ tham số model trùng. Weights khác sẽ dừng. Split 16 calibration / 10 holdout đóng băng bằng hash chỉ là split ảnh minh họa; chưa có scene provenance hay human GT.
 
 ## Đánh giá
 
@@ -69,4 +69,4 @@ python tools/validate_studio.py
 python tools/build_studio_data.py
 ```
 
-Lệnh cuối cần 4 model local và sinh lại replay từ inference thật. Các kiểm tra không thay thế quality trên GT hoặc pilot annotator. Workflow Pages chạy tests và kiểm tra hash/predictions trước publish docs. Public chỉ thay đổi sau commit/push/deploy được chủ repo cho phép.
+Lệnh cuối cần 4 model local và sinh lại replay từ inference thật. Các kiểm tra không thay thế quality trên GT hoặc pilot annotator. Workflow tùy chỉnh Pages chạy tests và kiểm tra hash/predictions trước publish docs. Cần cấu hình nguồn Pages dùng workflow đó; một luồng Pages build khác đã được quan sát vẫn publish độc lập. Public chỉ thay đổi sau commit/push/deploy được chủ repo cho phép.

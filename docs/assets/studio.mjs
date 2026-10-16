@@ -1,4 +1,4 @@
-import {BDD_LABELS,COCO_LABELS,labelFor,visibleBoxes,getReplay,createRequestGate,toCvatXml} from './core.mjs';
+import {BDD_LABELS,COCO_LABELS,exportLabel,visibleBoxes,getReplay,createRequestGate,toCvatXml} from './core.mjs';
 const $=id=>document.getElementById(id);
 const canvas=$('canvas'),ctx=canvas.getContext('2d'),gate=createRequestGate();
 const state={manifest:null,name:'BDD01.jpg',image:null,hash:null,isUpload:false,boxes:[],original:[],selected:null,
@@ -29,11 +29,11 @@ function refreshList(){
   if(!boxes.length){const p=document.createElement('p');p.className='empty';p.textContent=state.ready?'Không có hộp vượt bộ lọc. Có thể giảm confidence hoặc vẽ bổ sung.':'Chưa có prediction cho ảnh và nguồn này. Bấm Chạy prelabel.';$('box-list').append(p);}
   boxes.forEach((b,i)=>{const row=document.createElement('button');row.className=`box-row ${b.id===state.selected?'selected':''}`;
     row.setAttribute('aria-pressed',String(b.id===state.selected));
-    const name=document.createElement('span');name.textContent=`${i+1}. ${labelFor(b.class_name)}`;
+    const name=document.createElement('span');name.textContent=`${i+1}. ${exportLabel(b,$('scope').value)}`;
     const score=document.createElement('span');score.className='score';score.textContent=b.edited?'đã sửa':`${(100*b.confidence).toFixed(0)}%`;
     row.append(name,score);row.onclick=()=>{state.selected=b.id;refreshList();draw();};$('box-list').append(row);});
   const selected=state.boxes.find(b=>b.id===state.selected);$('editor').hidden=!selected;
-  if(selected){$('label').value=labelFor(selected.class_name);['x1','y1','x2','y2'].forEach((id,i)=>{$(id).value=selected.box_xyxy[i].toFixed(1);});}
+  if(selected){$('label').value=exportLabel(selected,$('scope').value);['x1','y1','x2','y2'].forEach((id,i)=>{$(id).value=selected.box_xyxy[i].toFixed(1);});}
   updateActions();
 }
 function transform(){const rect=canvas.getBoundingClientRect();const w=state.image?.naturalWidth||1,h=state.image?.naturalHeight||1;
@@ -48,7 +48,7 @@ function draw(){
     const [a,c,d,e]=b.box_xyxy,selected=b.id===state.selected;
     ctx.strokeStyle=selected?'#ffbd69':'#60f0ae';ctx.lineWidth=selected?2.5:1.5;
     ctx.strokeRect(x+a*scale,y+c*scale,(d-a)*scale,(e-c)*scale);
-    const label=`${labelFor(b.class_name)} ${b.edited?'*':(100*b.confidence).toFixed(0)+'%'}`;
+    const label=`${exportLabel(b,$('scope').value)} ${b.edited?'*':(100*b.confidence).toFixed(0)+'%'}`;
     ctx.font='600 11px Segoe UI,sans-serif';const tw=ctx.measureText(label).width;
     const lx=x+a*scale,ly=Math.max(0,y+c*scale-18);ctx.fillStyle=ctx.strokeStyle;ctx.fillRect(lx,ly,tw+9,18);ctx.fillStyle='#132326';ctx.fillText(label,lx+4,ly+13);
     if(selected){ctx.fillStyle='#ffbd69';ctx.fillRect(x+d*scale-5,y+e*scale-5,10,10);}
@@ -139,7 +139,8 @@ async function run(){
     }else{
       const response=await fetch('/api/predict',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image_name:imageName,runtime:runtime.split(':')[1],conf:.1})});
       const data=await response.json();if(!response.ok)throw new Error(data.error||'Inference API lỗi.');
-      if(!gate.current(id))return;if(data.image_name!==imageName)throw new Error('API trả sai ảnh.');
+      if(!gate.current(id))return;
+      if(data.image_name!==imageName||data.image_sha256!==state.hash||data.width!==state.image.naturalWidth||data.height!==state.image.naturalHeight)throw new Error('API trả sai ảnh hoặc hash/kích thước không khớp.');
       applyResult(data.detections,{source:`Chạy thật · Local ${data.runtime}`,latency_ms:data.latency_ms,timing_label:'Inference CPU local'});
       status('CPU local đã suy luận xong; nhãn cần được kiểm tra.','success');
     }
@@ -207,10 +208,11 @@ $('export-session').onclick=()=>download('m38_session.json',JSON.stringify({sche
 new ResizeObserver(draw).observe($('stage'));
 async function init(){
   try{
+    if(matchMedia('(max-width:760px)').matches)document.querySelector('.controls').open=false;
     const response=await fetch(new URL('../predictions/manifest.json',import.meta.url));if(!response.ok)throw new Error('Thiếu prediction manifest.');state.manifest=await response.json();
     const names=Object.keys(state.manifest.images);$('sample-count').textContent=String(names.length);
     for(const name of names){const b=document.createElement('button');b.textContent=name;b.dataset.name=name;b.className='sample';b.onclick=()=>{persist();state.name=name;state.isUpload=false;loadCurrent();};$('samples').append(b);}
-    for(const name of [...new Set([...BDD_LABELS,...COCO_LABELS.map(labelFor)])]){const o=document.createElement('option');o.value=o.textContent=name;$('label').append(o);}$('label').value='car';
+    for(const name of [...new Set([...BDD_LABELS,...COCO_LABELS])]){const o=document.createElement('option');o.value=o.textContent=name;$('label').append(o);}$('label').value='car';
     if(['localhost','127.0.0.1','[::1]'].includes(location.hostname)){
       try{const caps=await fetch('/api/capabilities');if(caps.ok){const data=await caps.json();for(const runtime of data.runtimes){const o=document.createElement('option');o.value=`local:${runtime}`;o.textContent=`Chạy thật · CPU local ${runtime}`;$('runtime').append(o);}}}catch{}
     }

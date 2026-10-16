@@ -38,4 +38,4 @@ def test_benchmark_3d_execution():
     assert result.runs == 3
     assert result.mean_total_ms > 0
     assert result.throughput_fps > 0
-    assert result.peak_ram_mb > 0
+    assert result.rss_before_after_max_mb > 0

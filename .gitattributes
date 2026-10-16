@@ -1,2 +1,7 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+docs/vendor/*.txt text eol=lf
+docs/vendor/*.js text eol=lf
+docs/vendor/*.mjs text eol=lf
+*.onnx binary
+*.wasm binary

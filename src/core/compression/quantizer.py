@@ -32,7 +32,7 @@ class ModelQuantizer:
 
     def _prepare_calibration_data(self, calib_dir: Optional[str] = None, subset_size: int = 100) -> List[np.ndarray]:
         """
-        Nạp ảnh calibration thực tế hoặc tạo tập ảnh giả lập (synthetic) chuẩn hóa nếu thư mục trống.
+        Nạp ảnh calibration thật với cùng RGB/letterbox như inference; không sinh noise.
         """
         data = []
         if calib_dir and Path(calib_dir).exists():
@@ -48,7 +48,7 @@ class ModelQuantizer:
                 from src.core.inference.preprocessing import prepare_image
                 data.append(prepare_image(img)[0])
 
-        # Nếu không có đủ ảnh thật, sinh dữ liệu synthetic để đảm bảo calibration chạy được
+        # Calibration không hợp lệ phải dừng, không thay dữ liệu bằng noise.
         if subset_size <= 0 or not data:
             raise ValueError('Real calibration images are required; random noise calibration is disabled')
 
@@ -59,6 +59,9 @@ class ModelQuantizer:
         Thực hiện Post-Training Quantization (PTQ) sang INT8 và lưu model.
         """
         out_path = Path(output_dir)
+        dest_xml = out_path / f"{self.xml_path.stem.replace('_fp16', '')}_int8.xml"
+        if dest_xml.exists() or dest_xml.with_suffix('.bin').exists():
+            raise FileExistsError(f'Preserving existing INT8 artifact: {dest_xml}')
         out_path.mkdir(parents=True, exist_ok=True)
 
         print("[*] Đang chuẩn bị tập dữ liệu Calibration cho NNCF...")

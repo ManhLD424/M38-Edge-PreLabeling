@@ -16,7 +16,8 @@
         "yolov8s.pt": "1268458ef67592ae5ce12f1667c4172863203cede9d9693aa4331383307ceff4"
       },
       "size_bytes": 22587377,
-      "quality_note": "COCO pretrained model; not BDD-trained or validated against GT here."
+      "quality_note": "COCO pretrained model; not BDD-trained or validated against GT here.",
+      "parameter_sha256": "83611b623fd0b221c10c87b966b7219804888819648cf916d2836c3fa3a9b3b0"
     },
     "onnx": {
       "path": "models/onnx/yolov8s.onnx",
