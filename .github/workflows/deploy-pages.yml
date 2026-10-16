@@ -35,6 +35,8 @@ jobs:
         run: node --test tests/web-core.test.mjs
       - name: Validate deployed image/model/vendor provenance
         run: python tools/validate_studio.py
+      - name: Verify report matches benchmark logs
+        run: python tools/build_results_page.py --check
       - name: Check browser scripts
         run: |
           node --check docs/assets/studio.mjs

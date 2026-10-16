@@ -2,6 +2,8 @@
 
 ## Unreleased — 2026-10-16 repair
 
+- Added a coach-facing results page generated from measured latency, artifact sizes and runtime agreement, with raw sources and explicit unmeasured metrics.
+
 - Replaced hardcoded demo labels with browser ONNX inference and hash-bound per-image replay.
 - Shared RGB/letterbox preprocessing and class-aware NMS across Python runtimes; bounded CPU threads.
 - Added zoom, pan, box editing/drawing/deletion, undo, review snapshots and CVAT XML export.
