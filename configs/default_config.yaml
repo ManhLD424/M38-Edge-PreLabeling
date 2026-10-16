@@ -1,0 +1,28 @@
+﻿# P030-M38: 3D LiDAR Point Cloud Model Compression & Pre-Labeling Configuration
+
+pointcloud:
+  default_pcd: "data/pointclouds/demo.pcd"
+  range: [0.0, -39.68, -3.0, 69.12, 39.68, 1.0]  # xmin, ymin, zmin, xmax, ymax, zmax (meters)
+  coordinate_system: "ISO_8855"                   # X: Forward, Y: Left, Z: Up
+
+pointpillars:
+  preset: "KITTI"
+  voxel_size: [0.16, 0.16, 4.0]                  # dx, dy, dz (meters)
+  delta: 1.73                                     # Sensor height offset (meters)
+  score_thresh: 0.30
+  heading_mode: "kitti"                           # "kitti" or "forward"
+  z_bottom: true                                  # Checkpoint returns bottom face Z
+  checkpoint: "models/pretrained/epoch_160.pth"
+
+classes:
+  0: "pedestrian"
+  1: "two-wheels"
+  2: "vehicles"
+
+vehicle_specs:
+  length_min: 2.8
+  length_max: 5.8
+  width_min: 1.4
+  width_max: 2.3
+  height_min: 1.1
+  height_max: 2.2

@@ -1,0 +1,21 @@
+﻿# CVAT 3D Server Integration Configuration
+
+server:
+  url: "https://cvat.note.transformerlabs.ai"
+  organization: "ai20k-cohort-4a"
+  timeout: 30
+
+defaults:
+  mode: "merge"                  # 'merge' or 'replace'
+  batch_size: 10
+
+# Mapping giữa class phát hiện của mô hình 3D và label ID/name của CVAT Job
+label_mapping:
+  "vehicles": 1
+  "car": 1
+  "bus": 1
+  "truck": 1
+  "two-wheels": 2
+  "motorcycle": 2
+  "bicycle": 2
+  "pedestrian": 3
