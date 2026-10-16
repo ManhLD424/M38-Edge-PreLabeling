@@ -1,438 +1,238 @@
-"""
-P030-M38: Model Compression & Edge Pre-Labeling Unified CLI Tool.
-Hỗ trợ cả bài toán lõi 2D BDD100K (Model Compression, Multi-Runtime Benchmark, mAP Eval, Pre-labeling)
-và mô-đun mở rộng 3D LiDAR Point Cloud cho xe tự hành.
-"""
-
-import sys
-import os
-import platform
+"""M38 commands: real inference, CVAT XML export, consistency and GT-based COCO AP."""
+import hashlib
 import json
+import platform
+import shutil
+import tempfile
 import time
+from datetime import datetime, timezone
 from pathlib import Path
-
-# Đảm bảo Windows terminal hiển thị tiếng Việt UTF-8 mượt mà
-if sys.platform == "win32":
-    if hasattr(sys.stdout, "reconfigure"):
-        sys.stdout.reconfigure(encoding="utf-8")
-    if hasattr(sys.stderr, "reconfigure"):
-        sys.stderr.reconfigure(encoding="utf-8")
-
 import click
 import cv2
-import numpy as np
-import psutil
-from rich.console import Console
-from rich.table import Table
-from rich.panel import Panel
+from src.core.inference.factory import make_engine, MODELS, ROOT
 
-console = Console(force_terminal=True)
+
+def save_json(path, data):
+    path = Path(path)
+    path.parent.mkdir(parents=True,exist_ok=True)
+    path.write_text(json.dumps(data,indent=2,ensure_ascii=False),encoding='utf-8')
+
+
+def split_paths(manifest, group, image_root):
+    data = json.loads(Path(manifest).read_text(encoding='utf-8'))
+    hashes = {key:{item['sha256'] for item in data[key]} for key in ('calibration','holdout')}
+    if hashes['calibration'] & hashes['holdout']:
+        raise click.ClickException('Calibration/holdout overlap by content hash')
+    root = Path(image_root).resolve()
+    paths = []
+    for item in data[group]:
+        path = (root/item['name']).resolve()
+        if not path.is_relative_to(root) or not path.is_file():
+            raise click.ClickException('Missing/invalid split image')
+        if hashlib.sha256(path.read_bytes()).hexdigest() != item['sha256']:
+            raise click.ClickException(f'Split hash mismatch: {path.name}')
+        paths.append(path)
+    if not paths:
+        raise click.ClickException('Empty split')
+    return paths
 
 
 @click.group()
 def cli():
-    """P030-M38: Model Compression for Edge Pre-Labeling CLI Tool."""
-    pass
+    """M38 Edge Prelabel Studio. Run from repository root."""
 
 
 @cli.command()
 def info():
-    """Hiển thị thông số môi trường phần cứng và các thư viện suy luận tối ưu."""
-    table = Table(title="[bold green]THÔNG SỐ MÔI TRƯỜNG PHẦN CỨNG & HỆ THỐNG M38[/bold green]")
-    table.add_column("Thành phần", style="cyan", no_wrap=True)
-    table.add_column("Giá trị", style="magenta")
-
-    table.add_row("Hệ điều hành", f"{platform.system()} {platform.release()} ({platform.architecture()[0]})")
-    table.add_row("Bộ vi xử lý (CPU)", platform.processor() or "x86_64")
-    table.add_row("Số nhân CPU (Cores / Threads)", f"{psutil.cpu_count(logical=False)} Cores / {psutil.cpu_count(logical=True)} Threads")
-    table.add_row("Tổng bộ nhớ RAM", f"{round(psutil.virtual_memory().total / (1024**3), 2)} GB")
-    table.add_row("Python Version", sys.version.split()[0])
-
-    try:
-        import torch
-        table.add_row("PyTorch Version", torch.__version__)
-    except ImportError:
-        table.add_row("PyTorch Version", "Chưa cài đặt")
-
-    try:
-        import openvino as ov
-        table.add_row("OpenVINO Version", ov.__version__)
-    except ImportError:
-        table.add_row("OpenVINO Version", "Chưa cài đặt")
-
-    try:
-        import nncf
-        table.add_row("Intel NNCF Version", nncf.__version__)
-    except ImportError:
-        table.add_row("Intel NNCF Version", "Chưa cài đặt")
-
-    try:
-        import onnxruntime as ort
-        table.add_row("ONNX Runtime Version", ort.__version__)
-    except ImportError:
-        table.add_row("ONNX Runtime Version", "Chưa cài đặt")
-
-    try:
-        import ultralytics
-        table.add_row("Ultralytics YOLO", ultralytics.__version__)
-    except ImportError:
-        table.add_row("Ultralytics YOLO", "Chưa cài đặt")
-
-    table.add_row("Tập dữ liệu chuẩn", "BDD100K (Berkeley DeepDrive) 2D Camera + PointCloud 3D")
-    table.add_row("Chuẩn xuất nhãn", "CVAT Bounding Box / CVAT 3D 16-point Cuboids / YOLO Format")
-    console.print(table)
+    """Report actual host, Python and installed model artifacts."""
+    click.echo(json.dumps({'python':platform.python_version(),'os':platform.platform(),
+        'models':{key:{'path':path,'available':Path(path).is_file()} for key,path in MODELS.items()}},indent=2))
 
 
 @cli.command()
-@click.option("--weights", default="models/raw/yolov8s.pt", help="Đường dẫn checkpoint PyTorch gốc (.pt)")
-@click.option("--calib-dir", default="data/calibration", help="Thư mục ảnh calibration BDD100K cho NNCF")
-@click.option("--subset-size", default=25, help="Số lượng ảnh calibration")
-def compress(weights, calib_dir, subset_size):
-    """Thực thi toàn bộ pipeline nén mô hình: FP32 -> ONNX -> OpenVINO FP16 -> OpenVINO INT8 (NNCF PTQ)."""
+@click.option('--weights',default='models/raw/yolov8s.pt',type=click.Path(exists=True,dir_okay=False))
+@click.option('--split-manifest',default='data/split_manifest.json',type=click.Path(exists=True))
+@click.option('--image-root',default='data/sample_images',type=click.Path(exists=True))
+@click.option('--output-root',default='models/rebuilt')
+def compress(weights,split_manifest,image_root,output_root):
+    """Rebuild ONNX/FP16/INT8 using frozen calibration images, never random noise."""
     from src.core.compression.exporter import ModelExporter
     from src.core.compression.quantizer import ModelQuantizer
-
-    console.print(Panel(f"[bold cyan]BẮT ĐẦU PIPELINE NÉN MÔ HÌNH: {weights}[/bold cyan]"))
-
-    # 1. Xuất ONNX
-    exporter = ModelExporter(weights_path=weights)
-    onnx_path = exporter.export_onnx()
-
-    # 2. Xuất OpenVINO FP16
-    ov_fp16_path = exporter.export_openvino_fp16()
-
-    # 3. Lượng tử hóa NNCF INT8 với ảnh BDD100K thật
-    quantizer = ModelQuantizer(str(ov_fp16_path))
-    int8_path = quantizer.quantize_int8(
-        output_dir="models/openvino_int8",
-        calib_dir=calib_dir,
-        subset_size=subset_size
-    )
-
-    console.print(Panel(f"[bold green]HOÀN THÀNH PIPELINE NÉN MÔ HÌNH THÀNH CÔNG![/bold green]\n"
-                        f"- ONNX Model: {onnx_path}\n"
-                        f"- OpenVINO FP16: {ov_fp16_path}\n"
-                        f"- OpenVINO INT8 (NNCF PTQ): {int8_path}"))
+    paths = split_paths(split_manifest,'calibration',image_root)
+    if Path(output_root).exists():
+        raise click.ClickException('Output root already exists; choose a new directory to preserve artifacts')
+    exporter = ModelExporter(weights,output_root)
+    onnx = exporter.export_onnx()
+    fp16 = exporter.export_openvino_fp16()
+    with tempfile.TemporaryDirectory(prefix='m38-calibration-') as directory:
+        for path in paths:
+            shutil.copy2(path,Path(directory)/path.name)
+        int8 = ModelQuantizer(str(fp16)).quantize_int8(str(Path(output_root)/'openvino_int8_rgb'),directory,len(paths))
+    save_json(Path(output_root)/'provenance.json',{'created_at':datetime.now(timezone.utc).isoformat(),
+        'weights_sha256':hashlib.sha256(Path(weights).read_bytes()).hexdigest(),
+        'split_manifest_sha256':hashlib.sha256(Path(split_manifest).read_bytes()).hexdigest(),
+        'preprocessing':'RGB letterbox 640, padding 114, float32 NCHW /255',
+        'onnx':str(onnx),'fp16':str(fp16),'int8':str(int8)})
+    click.echo(f'Rebuilt artifacts: {output_root}; update model configuration explicitly before serving.')
 
 
-@cli.command(name="benchmark-2d")
-@click.option("--runs", default=30, help="Số lượt suy luận benchmark trên mỗi runtime")
-@click.option("--save-json", default="outputs/benchmark_results.json", help="Đường dẫn lưu kết quả JSON")
-def benchmark_2d(runs, save_json):
-    """Đo kiểm hiệu năng đa Runtime trên CPU (PyTorch FP32 vs ONNX vs OpenVINO FP16 vs INT8)."""
-    from src.core.inference.torch_engine import TorchInferenceEngine
-    from src.core.inference.ov_engine import OpenVINOInferenceEngine
-    from src.core.inference.onnx_engine import ONNXInferenceEngine
-    from src.core.benchmark.latency import LatencyBenchmark
-    from src.core.benchmark.memory import MemoryBenchmark
-
-    test_img = np.random.randint(0, 255, (640, 640, 3), dtype=np.uint8)
-
-    models_to_test = [
-        ("PyTorch (FP32 Baseline)", TorchInferenceEngine, "models/raw/yolov8s.pt"),
-        ("ONNX Runtime (FP32)", ONNXInferenceEngine, "models/onnx/yolov8s.onnx"),
-        ("OpenVINO (FP16)", OpenVINOInferenceEngine, "models/openvino_fp16/yolov8s_fp16.xml"),
-        ("OpenVINO (INT8 Compressed)", OpenVINOInferenceEngine, "models/openvino_int8/yolov8s_int8.xml"),
-    ]
-
-    results_table = Table(title="[bold yellow]KẾT QUẢ BENCHMARK HIỆU NĂNG THỰC NGHIỆM TRÊN CPU (M38)[/bold yellow]")
-    results_table.add_column("Runtime / Phiên bản", style="cyan", no_wrap=True)
-    results_table.add_column("Model Size", style="green")
-    results_table.add_column("Mean Latency", style="yellow")
-    results_table.add_column("P50 (Median)", style="white")
-    results_table.add_column("P90", style="white")
-    results_table.add_column("Throughput (FPS)", style="bold magenta")
-    results_table.add_column("Speedup vs Baseline", style="bold green")
-
-    benchmark_data = {
-        "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "hardware": {
-            "os": f"{platform.system()} {platform.release()}",
-            "cpu": platform.processor() or "x86_64",
-            "cores": psutil.cpu_count(logical=False),
-            "threads": psutil.cpu_count(logical=True),
-            "ram_gb": round(psutil.virtual_memory().total / (1024**3), 2)
-        },
-        "runs": runs,
-        "results": []
-    }
-
-    baseline_mean = None
-
-    for name, engine_cls, model_path in models_to_test:
-        if not Path(model_path).exists():
-            console.print(f"[yellow][!] Bỏ qua {name} (Chưa tìm thấy {model_path})[/yellow]")
-            continue
-
-        console.print(f"[*] Đang đo kiểm: [bold]{name}[/bold] ({runs} lượt)...")
-        size_mb = MemoryBenchmark.get_model_size_mb(model_path)
-
-        try:
-            engine = engine_cls(model_path=model_path)
-            bench = LatencyBenchmark(engine, warmup_runs=5, test_runs=runs)
-            stats = bench.run(test_img)
-
-            if baseline_mean is None:
-                baseline_mean = stats["mean_ms"]
-                speedup_str = "1.0x (Baseline)"
-                speedup_val = 1.0
-            else:
-                ratio = round(baseline_mean / stats["mean_ms"], 2) if stats["mean_ms"] > 0 else 0.0
-                speedup_str = f"{ratio}x"
-                speedup_val = ratio
-
-            results_table.add_row(
-                name,
-                f"{size_mb} MB",
-                f"{stats['mean_ms']} ms",
-                f"{stats['p50_ms']} ms",
-                f"{stats['p90_ms']} ms",
-                f"{stats['fps']} FPS",
-                speedup_str
-            )
-
-            benchmark_data["results"].append({
-                "name": name,
-                "model_path": model_path,
-                "model_size_mb": size_mb,
-                "mean_ms": stats["mean_ms"],
-                "p50_ms": stats["p50_ms"],
-                "p90_ms": stats["p90_ms"],
-                "p99_ms": stats["p99_ms"],
-                "fps": stats["fps"],
-                "speedup": speedup_val
-            })
-        except Exception as e:
-            console.print(f"[red][!] Lỗi khi đo {name}: {e}[/red]")
-
-    console.print(results_table)
-
-    # Lưu file JSON
-    out_p = Path(save_json)
-    out_p.parent.mkdir(parents=True, exist_ok=True)
-    out_p.write_text(json.dumps(benchmark_data, indent=2, ensure_ascii=False), encoding="utf-8")
-    console.print(f"[bold green][✓] Đã lưu kết quả raw benchmark vào: {out_p}[/bold green]")
-
-
-@cli.command(name="eval-accuracy")
-@click.option("--sample-dir", default="data/sample_images", help="Thư mục ảnh BDD100K kiểm định")
-@click.option("--save-json", default="outputs/accuracy_results.json", help="Đường dẫn lưu kết quả đánh giá mAP")
-def eval_accuracy(sample_dir, save_json):
-    """Đánh giá sai số mAP@50, mAP@50:95 và mAP Drop tuyệt đối trên tập BDD100K."""
-    from src.core.inference.torch_engine import TorchInferenceEngine
-    from src.core.inference.ov_engine import OpenVINOInferenceEngine
-    from src.core.inference.onnx_engine import ONNXInferenceEngine
-    from src.core.benchmark.accuracy_bench import AccuracyBenchmark
-
-    img_paths = sorted(list(Path(sample_dir).glob("*.jpg")))
-    if not img_paths:
-        console.print(f"[bold red][!] Không tìm thấy ảnh trong thư mục: {sample_dir}[/bold red]")
-        sys.exit(1)
-
-    console.print(Panel(f"[bold cyan]ĐÁNH GIÁ ĐỘ CHÍNH XÁC & mAP DROP TRÊN {len(img_paths)} ẢNH BDD100K[/bold cyan]"))
-
-    ref_engine = TorchInferenceEngine("models/raw/yolov8s.pt")
-    bench = AccuracyBenchmark()
-
-    eval_targets = [
-        ("ONNX Runtime (FP32)", ONNXInferenceEngine("models/onnx/yolov8s.onnx")),
-        ("OpenVINO (FP16)", OpenVINOInferenceEngine("models/openvino_fp16/yolov8s_fp16.xml")),
-        ("OpenVINO (INT8 NNCF PTQ)", OpenVINOInferenceEngine("models/openvino_int8/yolov8s_int8.xml")),
-    ]
-
-    table = Table(title="[bold yellow]BẢNG ĐÁNH GIÁ ĐỘ CHÍNH XÁC & SAI LỆCH mAP (M38 EVALUATION)[/bold yellow]")
-    table.add_column("Mô hình đánh giá", style="cyan", no_wrap=True)
-    table.add_column("Hộp phát hiện", style="white")
-    table.add_column("Tỉ lệ giữ nhãn (Retention)", style="green")
-    table.add_column("Mean IoU", style="yellow")
-    table.add_column("mAP@50 (%)", style="bold magenta")
-    table.add_column("mAP@50:95 (%)", style="magenta")
-    table.add_column("mAP Drop vs FP32 (%)", style="bold red")
-
-    eval_results = {
-        "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "total_test_images": len(img_paths),
-        "reference_model": "PyTorch YOLOv8s FP32",
-        "evaluations": []
-    }
-
-    for name, cand_engine in eval_targets:
-        console.print(f"[*] Đang đánh giá: [bold]{name}[/bold]...")
-        metrics = bench.evaluate_dataset(ref_engine, cand_engine, img_paths)
-
-        table.add_row(
-            name,
-            f"{metrics['cand_total_boxes']} / {metrics['ref_total_boxes']}",
-            f"{metrics['retention_rate_percent']}%",
-            f"{metrics['mean_matched_iou']}",
-            f"{metrics['map_50']}%",
-            f"{metrics['map_50_95']}%",
-            f"{metrics['map_drop_percentage_points']}%"
-        )
-
-        eval_results["evaluations"].append({
-            "candidate_name": name,
-            "metrics": metrics
-        })
-
-    console.print(table)
-
-    out_p = Path(save_json)
-    out_p.parent.mkdir(parents=True, exist_ok=True)
-    out_p.write_text(json.dumps(eval_results, indent=2, ensure_ascii=False), encoding="utf-8")
-    console.print(f"[bold green][✓] Đã lưu báo cáo đánh giá mAP vào: {out_p}[/bold green]")
-
-
-@cli.command(name="prelabel-2d")
-@click.option("--source", default="data/sample_images/BDD01.jpg", help="Đường dẫn ảnh hoặc thư mục ảnh BDD100K")
-@click.option("--model", default="models/openvino_int8/yolov8s_int8.xml", help="Mô hình suy luận (.xml / .onnx / .pt)")
-@click.option("--out", default="outputs/prelabels", help="Thư mục xuất nhãn JSON / ảnh trực quan")
-@click.option("--conf", default=0.25, type=float, help="Ngưỡng điểm tin cậy")
-def prelabel_2d(source, model, out, conf):
-    """Chạy Edge Pre-labeling 2D trên ảnh BDD100K và xuất file CVAT/YOLO format."""
-    from src.core.inference.ov_engine import OpenVINOInferenceEngine
-    from src.core.inference.onnx_engine import ONNXInferenceEngine
-    from src.core.inference.torch_engine import TorchInferenceEngine
+@cli.command(name='prelabel-2d')
+@click.option('--source',default='data/sample_images',type=click.Path(exists=True))
+@click.option('--model',default=MODELS['openvino_fp16'],type=click.Path(exists=True,dir_okay=False))
+@click.option('--out',default='outputs/prelabels-v2')
+@click.option('--conf',default=.25,type=click.FloatRange(0,1))
+@click.option('--scope',type=click.Choice(['traffic','all']),default='traffic')
+def prelabel_2d(source,model,out,conf,scope):
+    """Infer real boxes and export CVAT for images 1.1 XML plus an explicit custom JSON."""
+    from src.core.cvat.export import export_cvat_xml
     from src.core.inference.base import COCO_TO_BDD100K
-
-    src_p = Path(source)
-    if not src_p.exists():
-        console.print(f"[bold red][!] Không tìm thấy nguồn ảnh: {source}[/bold red]")
-        sys.exit(1)
-
-    # Chọn engine phù hợp theo đuôi file model
-    if str(model).endswith(".xml"):
-        engine = OpenVINOInferenceEngine(model, conf_thresh=conf)
-    elif str(model).endswith(".onnx"):
-        engine = ONNXInferenceEngine(model, conf_thresh=conf)
-    else:
-        engine = TorchInferenceEngine(model, conf_thresh=conf)
-
-    out_dir = Path(out)
-    out_dir.mkdir(parents=True, exist_ok=True)
-
-    images = [src_p] if src_p.is_file() else sorted(list(src_p.glob("*.jpg")) + list(src_p.glob("*.png")))
-    console.print(f"[*] Bắt đầu Edge Pre-Labeling trên {len(images)} ảnh bằng [bold green]{model}[/bold green]...")
-
-    all_cvat_annotations = []
-    total_time_ms = 0.0
-
-    for idx, img_file in enumerate(images):
-        img = cv2.imread(str(img_file))
-        if img is None:
-            continue
-
-        t0 = time.perf_counter()
-        detections = engine.predict(img)
-        dt = (time.perf_counter() - t0) * 1000.0
-        total_time_ms += dt
-
-        cvat_shapes = []
-        vis_img = img.copy()
-
+    runtime = 'openvino_fp16' if model.endswith('.xml') else 'onnx' if model.endswith('.onnx') else 'torch'
+    engine = make_engine(runtime,model,conf)
+    path = Path(source)
+    images = [path] if path.is_file() else sorted(p for p in path.iterdir() if p.suffix.lower() in ('.jpg','.jpeg','.png'))
+    if not images:
+        raise click.ClickException('No images found')
+    records = []
+    target = Path(out)
+    target.mkdir(parents=True,exist_ok=True)
+    for image_path in images:
+        image = cv2.imread(str(image_path))
+        if image is None:
+            raise click.ClickException(f'Unreadable image: {image_path}')
+        start = time.perf_counter()
+        detections = engine.predict(image)
+        shapes = []
         for det in detections:
-            bdd_label = COCO_TO_BDD100K.get(det.class_name, det.class_name)
-            cvat_shapes.append({
-                "type": "rectangle",
-                "label": bdd_label,
-                "points": det.box_cvat,
-                "confidence": round(det.confidence, 3),
-                "occluded": False
-            })
+            if scope=='traffic' and det.class_name not in COCO_TO_BDD100K:
+                continue
+            label = COCO_TO_BDD100K.get(det.class_name,det.class_name)
+            shapes.append({'type':'rectangle','label':label,'points':det.box_cvat,'confidence':det.confidence})
+            x1,y1,x2,y2 = map(int,det.box_xyxy)
+            cv2.rectangle(image,(x1,y1),(x2,y2),(40,220,140),2)
+            cv2.putText(image,label,(x1,max(15,y1-5)),cv2.FONT_HERSHEY_SIMPLEX,.45,(40,220,140),1)
+        records.append({'image':image_path.name,'width':image.shape[1],'height':image.shape[0],
+            'shapes':shapes,'elapsed_with_render_ms':round((time.perf_counter()-start)*1000,2)})
+        cv2.imwrite(str(target/f'pred_{image_path.name}'),image)
+    (target/'annotations.xml').write_text(export_cvat_xml(records),encoding='utf-8')
+    save_json(target/'studio_prelabels.json',{'schema':'m38-prelabels-v1','images':records})
+    click.echo(f'Exported {len(records)} images: {target}/annotations.xml (CVAT for images 1.1)')
 
-            # Vẽ trực quan
-            x1, y1, x2, y2 = [int(v) for v in det.box_xyxy]
-            cv2.rectangle(vis_img, (x1, y1), (x2, y2), (0, 255, 0), 2)
-            tag = f"{bdd_label}: {det.confidence:.2f}"
-            cv2.putText(vis_img, tag, (x1, max(15, y1 - 6)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
 
-        all_cvat_annotations.append({
-            "image": img_file.name,
-            "width": img.shape[1],
-            "height": img.shape[0],
-            "shapes": cvat_shapes,
-            "latency_ms": round(dt, 2)
-        })
+@cli.command(name='compare-runtimes')
+@click.option('--split-manifest',default='data/split_manifest.json',type=click.Path(exists=True))
+@click.option('--image-root',default='data/sample_images',type=click.Path(exists=True))
+@click.option('--save-json',default='outputs/consistency-v2.json')
+def compare_runtimes(split_manifest,image_root,save_json):
+    """Measure model agreement on a held-out image split. This is NOT accuracy/mAP."""
+    from src.core.benchmark.accuracy_bench import AccuracyBenchmark
+    paths = split_paths(split_manifest,'holdout',image_root)
+    reference = make_engine('torch')
+    results = {}
+    for runtime in ('onnx','openvino_fp16','openvino_int8'):
+        results[runtime] = AccuracyBenchmark().evaluate_dataset(reference,make_engine(runtime),paths)
+    save_json_file = save_json
+    globals()['save_json'](save_json_file,{'split':split_manifest,'evaluations':results})
+    click.echo(json.dumps(results,indent=2))
 
-        # Lưu ảnh vẽ hộp
-        cv2.imwrite(str(out_dir / f"pred_{img_file.name}"), vis_img)
 
-    json_file = out_dir / "cvat_prelabels.json"
-    json_file.write_text(json.dumps(all_cvat_annotations, indent=2, ensure_ascii=False), encoding="utf-8")
+@cli.command(name='eval-accuracy')
+@click.option('--annotations',required=True,type=click.Path(exists=True,dir_okay=False),help='Human ground truth, COCO instances JSON')
+@click.option('--image-root',required=True,type=click.Path(exists=True,file_okay=False))
+@click.option('--runtime',type=click.Choice(list(MODELS)),default='openvino_fp16')
+@click.option('--save-json',default='outputs/coco-accuracy.json')
+def eval_accuracy(annotations,image_root,runtime,save_json):
+    """Evaluate actual COCO AP against human GT. Predictions are not ground truth."""
+    from src.core.benchmark.coco_accuracy import evaluate_coco
+    engine = make_engine(runtime,conf=.001)
+    metrics = evaluate_coco(engine,annotations,image_root)
+    metrics['annotation_sha256'] = hashlib.sha256(Path(annotations).read_bytes()).hexdigest()
+    globals()['save_json'](save_json,metrics)
+    click.echo(json.dumps({key:value for key,value in metrics.items() if key!='predictions'},indent=2))
 
-    mean_ms = round(total_time_ms / len(images), 2) if images else 0.0
-    fps = round(1000.0 / mean_ms, 1) if mean_ms > 0 else 0.0
 
-    console.print(Panel(f"[bold green][✓] HOÀN TẤT PRE-LABELING![/bold green]\n"
-                        f"- Số lượng ảnh xử lý: {len(images)}\n"
-                        f"- Độ trễ trung bình: {mean_ms} ms / frame ({fps} FPS)\n"
-                        f"- File JSON chuẩn CVAT: {json_file}\n"
-                        f"- Ảnh trực quan kết quả: {out_dir}/pred_*.jpg"))
+@cli.command(name='benchmark-2d')
+@click.option('--runs',default=3,type=click.IntRange(1,100))
+@click.option('--warmup',default=3,type=click.IntRange(0,100))
+@click.option('--sample-dir',default='data/sample_images',type=click.Path(exists=True))
+@click.option('--save-json','--out',default='outputs/latency-v2.json')
+def benchmark_2d(runs,warmup,sample_dir,save_json):
+    """Time sequential end-to-end predict() on real images; retain raw samples."""
+    import psutil
+    paths = sorted(Path(sample_dir).glob('*.jpg'))
+    if not paths:
+        raise click.ClickException('No benchmark images')
+    images = [cv2.imread(str(p)) for p in paths]
+    if any(image is None for image in images):
+        raise click.ClickException('Unreadable benchmark image')
+    import numpy as np
+    results = {}
+    for runtime in MODELS:
+        engine = make_engine(runtime)
+        for _ in range(warmup):
+            engine.predict(images[0])
+        raw = []
+        for repeat in range(runs):
+            for path,image in zip(paths,images):
+                start = time.perf_counter_ns(); detections = engine.predict(image)
+                raw.append({'image':path.name,'repeat':repeat,'boxes':len(detections),
+                    'ms':(time.perf_counter_ns()-start)/1e6})
+        times = np.array([r['ms'] for r in raw])
+        results[runtime] = {'mean_ms':float(times.mean()),'p50_ms':float(np.percentile(times,50)),
+            'p95_ms':float(np.percentile(times,95)),'p99_ms':float(np.percentile(times,99)),
+            'sequential_images_per_second':1000/float(times.mean()),'raw':raw,
+            'model_path':str(engine.model_path),'model_sha256':hashlib.sha256(Path(engine.model_path).read_bytes()).hexdigest()}
+    globals()['save_json'](save_json,{'created_at':datetime.now(timezone.utc).isoformat(),
+        'hardware':platform.platform(),'cpu':platform.processor(),'threads':psutil.cpu_count(),
+        'protocol':'sequential predict including preprocess/NMS; no streaming throughput claim',
+        'images':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in paths},'evaluations':results})
+    click.echo(f'Wrote raw real-image timings: {save_json}')
 
 
 @cli.command()
-@click.option("--port", default=8080, help="Cổng mạng khởi chạy Web MVP (default 8080)")
-def serve(port):
-    """Khởi chạy ứng dụng Web MVP tương tác cục bộ (Local Interactive Demo)."""
+@click.option('--port',default=8080,type=click.IntRange(1,65535))
+@click.option('--host',default='127.0.0.1',type=click.Choice(['127.0.0.1','::1']))
+def serve(port,host):
+    """Serve the shared Studio and CPU inference API on loopback only."""
     from src.web.app import run_server
-    console.print(f"[bold green]Khởi chạy Web MVP Server tại http://127.0.0.1:{port}[/bold green]")
-    run_server(port=port)
+    run_server(port,host)
 
 
-# ==============================================================================
-# CÁC LỆNH MỞ RỘNG 3D LIDAR POINT CLOUD (MULTI-MODAL DIFFERENTIATOR)
-# ==============================================================================
-
-@cli.command(name="infer-3d")
-@click.option("--pcd", default="data/pointclouds/demo.pcd", help="Đường dẫn file point cloud (.pcd)")
-@click.option("--out", default="outputs", help="Thư mục xuất kết quả JSON")
-@click.option("--score-thresh", default=0.30, type=float, help="Ngưỡng tin cậy")
-@click.option("--full-scene", is_flag=True, help="Quét cả trước và sau")
-def infer_3d(pcd, out, score_thresh, full_scene):
-    """[3D Module] Suy luận phát hiện 3D Cuboids trên file LiDAR Point Cloud (.pcd)."""
-    from src.core.pointcloud.pcd_io import read_pcd
-    from src.core.pointcloud.ground import estimate_ground
+@cli.command(name='infer-3d')
+@click.option('--pcd',default='data/pointclouds/demo.pcd',type=click.Path(exists=True))
+@click.option('--out',default='outputs/3d-heuristic')
+@click.option('--score-thresh',default=.3,type=click.FloatRange(0,1))
+@click.option('--full-scene',is_flag=True)
+@click.option('--checkpoint',type=click.Path(exists=True,dir_okay=False))
+def infer_3d(pcd,out,score_thresh,full_scene,checkpoint):
+    """Experimental geometry proposals, or explicit learned checkpoint; no CVAT IDs guessed."""
     from src.core.models.detector import PointPillarsDetector, DetectorConfig
-    from src.core.geometry.cvat_adapter import CVAT3DAdapter
-
-    pcd_path = Path(pcd)
-    if not pcd_path.is_file():
-        console.print(f"[bold red][!] Không tìm thấy file PCD: {pcd}[/bold red]")
-        sys.exit(1)
-
-    pcd_data = read_pcd(pcd_path)
-    z_ground = estimate_ground(pcd_data.xyz)
-    console.print(f"[*] Nạp {pcd_data.count} điểm LiDAR | Mặt đất Z_ground: {z_ground:.3f}m")
-
-    cfg = DetectorConfig(score_thresh=score_thresh)
-    detector = PointPillarsDetector(config=cfg)
-    cuboids = detector.detect(pcd_data.xyz, z_ground=z_ground, full_scene=full_scene)
-    console.print(f"[bold green][✓] Phát hiện được {len(cuboids)} 3D cuboids[/bold green]")
-
-    out_dir = Path(out)
-    out_dir.mkdir(parents=True, exist_ok=True)
-    out_json = out_dir / f"boxes_{pcd_path.stem}.json"
-    adapter = CVAT3DAdapter()
-    shapes_payload = adapter.to_shapes_payload(cuboids, frame=0)
-    out_json.write_text(json.dumps(shapes_payload, indent=2, ensure_ascii=False), encoding="utf-8")
-    console.print(f"[bold green][✓] Đã xuất kết quả chuẩn CVAT 3D tại: {out_json}[/bold green]")
+    from src.core.pointcloud.pcd_io import read_pcd
+    points = read_pcd(pcd)
+    cloud = points.xyz
+    if points.intensity is not None:
+        import numpy as np
+        cloud = np.column_stack((cloud,points.intensity))
+    detector = PointPillarsDetector(DetectorConfig(score_thresh=score_thresh,checkpoint_path=checkpoint))
+    boxes = detector.detect(cloud,full_scene=full_scene)
+    backend = 'pointpillars_checkpoint' if detector.model is not None else 'experimental_geometry_heuristic'
+    save_json(Path(out)/'proposals.json',{'schema':'m38-3d-proposals-v1','backend':backend,
+        'quality':'unvalidated; scores of heuristic are not calibrated probabilities',
+        'boxes':[box.to_dict() for box in boxes]})
+    click.echo(f'{backend}: {len(boxes)} proposals; custom JSON, not a CVAT import file')
 
 
-@cli.command(name="benchmark-3d")
-@click.option("--pcd", default="data/pointclouds/demo.pcd", help="Đường dẫn file point cloud (.pcd)")
-@click.option("--runs", default=30, help="Số lượt đo lường")
-def benchmark_3d_cmd(pcd, runs):
-    """[3D Module] Đo kiểm hiệu năng suy luận 3D Point Cloud trên CPU."""
+@cli.command(name='benchmark-3d')
+@click.option('--pcd',default='data/pointclouds/demo.pcd',type=click.Path(exists=True))
+@click.option('--runs',default=3,type=click.IntRange(1,100))
+def benchmark_3d_cmd(pcd,runs):
+    """Time experimental geometry proposals, not learned PointPillars inference."""
+    from dataclasses import asdict
     from src.core.benchmark.benchmark_3d import Benchmark3D
-    bench = Benchmark3D()
-    res = bench.run(pcd_path=pcd, runs=runs)
-    console.print(Panel(f"[bold green]KẾT QUẢ BENCHMARK 3D LIDAR TRÊN CPU[/bold green]\n"
-                        f"- Total Latency (P50): {res.p50_total_ms} ms\n"
-                        f"- Total Latency (P90): {res.p90_total_ms} ms\n"
-                        f"- Throughput: {res.throughput_fps} FPS\n"
-                        f"- Peak Memory (RSS): {res.peak_ram_mb} MB\n"
-                        f"- Detected Cuboids: {res.detected_cuboids}"))
+    result = asdict(Benchmark3D().run(pcd,runs=runs))
+    result['backend'] = 'experimental_geometry_heuristic'
+    result['rss_note'] = 'RSS before/after only; not peak memory'
+    click.echo(json.dumps(result,indent=2))
 
 
-if __name__ == "__main__":
+if __name__=='__main__':
     cli()

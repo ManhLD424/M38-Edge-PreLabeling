@@ -1,0 +1,1329 @@
+{
+  "created_at": "2026-10-16T06:52:03.181622+00:00",
+  "hardware": "Windows-11-10.0.26300-SP0",
+  "cpu": "Intel64 Family 6 Model 154 Stepping 3, GenuineIntel",
+  "threads": 12,
+  "protocol": "sequential predict including preprocess/NMS; no streaming throughput claim",
+  "images": {
+    "BDD01.jpg": "2d1bf9fc1063651911c8ab531a3f70ddec83c45c7cb6c8d905e7b3685e481983",
+    "BDD02.jpg": "1b8ba083ddc90c60e9804acf4fbbe83d1c1ccf8b7672630fef7043e588adbec5",
+    "BDD03.jpg": "deafb8c1f4f24a0b448d6fe091dae0a9a6f0351c9f272208d18c618028ab4b13",
+    "BDD04.jpg": "1a85912736d12620e6cd108a425d54acfae812a89c62b7cf655d5ce8f8a3ac7c",
+    "BDD05.jpg": "2f33a25a7c0502eac3ab212ce3cad78b8c0d85deb34b9e834dfa8f5e7e4ba841",
+    "BDD06.jpg": "36b5b9314c026783a7efb0b37b7535a21453a34098dc61fc617e838b567b4a7b",
+    "BDD07.jpg": "4cc74cf6150e5271265b4967c3a71dc6a8bf756f21f3953a9f83131a03b09e91",
+    "BDD08.jpg": "e5944c409118c9ca77c36c8053c502a60a40accd00cf0b90d2a1c7e4f4b6aa65",
+    "BDD09.jpg": "1f1b90ae3190acd8f63d24693d2ef940bbce5c27bd460c9949bec3e27f5562db",
+    "BDD10.jpg": "56c7bed1bccc2ce553d5e58b5d124a5363255ffdc020f15f4f55c3af517a1686",
+    "BDD11.jpg": "11874cf7c4d487cd173e1f31be08f1020a0ca13ce696250d4092d3a84747ecd1",
+    "BDD12.jpg": "bc40b4e2e3ae25ea2e53e331ec1ab701a62eef19c27402de22c6316d5dd4e379",
+    "BDD13.jpg": "5917959991e2200838161b3308c1b4f71632f25890f25b6c25bbc2f1bba4e4ba",
+    "BDD14.jpg": "a64fde81f45fa9800b45f2611198d660b7f470f1858739d0f2199fef486a0cfb",
+    "BDD15.jpg": "ce38379e75e7ceb168c5d015f35c1778b193b9cc41dd32fd0ea7b0f4f7eed38d",
+    "BDD16.jpg": "2fd1efe106b20710b4fb53ed126b139ee8e73d5ca9c1b6abfa600fbc159fe71c",
+    "BDD17.jpg": "20d4f967904949769b6a3f38d654209352de7f23454d84495fc5fe87a438c51b",
+    "BDD18.jpg": "3dafca9350bea75b8f82583ce632215407b910d0e1489c0b1481cb21bd38a433",
+    "BDD19.jpg": "26da8a8375ebd956a5c82562072cb78ca3fc900e76aade5d8943c3dcd2954f41",
+    "BDD20.jpg": "742b11a06add4d5f3429bd836ef448a587b1dc68739e704a25194f960f21a69a",
+    "BDD21.jpg": "1be72fc0bdcf103ec271ed071551489ce1f22109f0f74ee9c35af83f1889a3c2",
+    "BDD22.jpg": "9a6b8bf14ab82908f1d0b42d27be877389b333ab94304304b48ead2188f38de9",
+    "BDD23.jpg": "e7ce0f413af6181791775dc64c92db09e12111a1a69456b1a8c5a98fff90cfe6",
+    "BDD24.jpg": "30c679505c43fdcba67da109bbe6b5a90cc6410d514eba3fc6cca461ab8047e7",
+    "BDD25.jpg": "98fb320badb8d026a5c9db799fc726b374aec4892a5148ec917536207c0634fb",
+    "BDD26.jpg": "97d0412d33b6f3fd2b129e4f2394d0887d4c16df5aa83ce604878d4c912a0ff0"
+  },
+  "evaluations": {
+    "torch": {
+      "mean_ms": 208.99744423076922,
+      "p50_ms": 196.90120000000002,
+      "p95_ms": 309.44117,
+      "p99_ms": 338.909695,
+      "sequential_images_per_second": 4.784747505791638,
+      "raw": [
+        {
+          "image": "BDD01.jpg",
+          "repeat": 0,
+          "boxes": 9,
+          "ms": 199.6106
+        },
+        {
+          "image": "BDD02.jpg",
+          "repeat": 0,
+          "boxes": 17,
+          "ms": 190.5375
+        },
+        {
+          "image": "BDD03.jpg",
+          "repeat": 0,
+          "boxes": 9,
+          "ms": 185.4733
+        },
+        {
+          "image": "BDD04.jpg",
+          "repeat": 0,
+          "boxes": 15,
+          "ms": 292.7169
+        },
+        {
+          "image": "BDD05.jpg",
+          "repeat": 0,
+          "boxes": 14,
+          "ms": 344.2726
+        },
+        {
+          "image": "BDD06.jpg",
+          "repeat": 0,
+          "boxes": 4,
+          "ms": 246.9349
+        },
+        {
+          "image": "BDD07.jpg",
+          "repeat": 0,
+          "boxes": 16,
+          "ms": 198.4441
+        },
+        {
+          "image": "BDD08.jpg",
+          "repeat": 0,
+          "boxes": 12,
+          "ms": 233.8656
+        },
+        {
+          "image": "BDD09.jpg",
+          "repeat": 0,
+          "boxes": 4,
+          "ms": 202.5219
+        },
+        {
+          "image": "BDD10.jpg",
+          "repeat": 0,
+          "boxes": 13,
+          "ms": 214.7598
+        },
+        {
+          "image": "BDD11.jpg",
+          "repeat": 0,
+          "boxes": 13,
+          "ms": 217.3136
+        },
+        {
+          "image": "BDD12.jpg",
+          "repeat": 0,
+          "boxes": 14,
+          "ms": 226.3799
+        },
+        {
+          "image": "BDD13.jpg",
+          "repeat": 0,
+          "boxes": 12,
+          "ms": 258.8502
+        },
+        {
+          "image": "BDD14.jpg",
+          "repeat": 0,
+          "boxes": 7,
+          "ms": 212.8597
+        },
+        {
+          "image": "BDD15.jpg",
+          "repeat": 0,
+          "boxes": 9,
+          "ms": 179.6887
+        },
+        {
+          "image": "BDD16.jpg",
+          "repeat": 0,
+          "boxes": 4,
+          "ms": 181.0017
+        },
+        {
+          "image": "BDD17.jpg",
+          "repeat": 0,
+          "boxes": 10,
+          "ms": 169.7547
+        },
+        {
+          "image": "BDD18.jpg",
+          "repeat": 0,
+          "boxes": 12,
+          "ms": 191.7641
+        },
+        {
+          "image": "BDD19.jpg",
+          "repeat": 0,
+          "boxes": 4,
+          "ms": 174.4296
+        },
+        {
+          "image": "BDD20.jpg",
+          "repeat": 0,
+          "boxes": 14,
+          "ms": 180.0938
+        },
+        {
+          "image": "BDD21.jpg",
+          "repeat": 0,
+          "boxes": 8,
+          "ms": 164.9745
+        },
+        {
+          "image": "BDD22.jpg",
+          "repeat": 0,
+          "boxes": 0,
+          "ms": 165.4255
+        },
+        {
+          "image": "BDD23.jpg",
+          "repeat": 0,
+          "boxes": 15,
+          "ms": 164.7007
+        },
+        {
+          "image": "BDD24.jpg",
+          "repeat": 0,
+          "boxes": 13,
+          "ms": 169.2952
+        },
+        {
+          "image": "BDD25.jpg",
+          "repeat": 0,
+          "boxes": 11,
+          "ms": 167.0284
+        },
+        {
+          "image": "BDD26.jpg",
+          "repeat": 0,
+          "boxes": 6,
+          "ms": 160.1649
+        },
+        {
+          "image": "BDD01.jpg",
+          "repeat": 1,
+          "boxes": 9,
+          "ms": 166.1634
+        },
+        {
+          "image": "BDD02.jpg",
+          "repeat": 1,
+          "boxes": 17,
+          "ms": 164.3709
+        },
+        {
+          "image": "BDD03.jpg",
+          "repeat": 1,
+          "boxes": 9,
+          "ms": 168.6743
+        },
+        {
+          "image": "BDD04.jpg",
+          "repeat": 1,
+          "boxes": 15,
+          "ms": 254.5745
+        },
+        {
+          "image": "BDD05.jpg",
+          "repeat": 1,
+          "boxes": 14,
+          "ms": 225.5592
+        },
+        {
+          "image": "BDD06.jpg",
+          "repeat": 1,
+          "boxes": 4,
+          "ms": 230.6546
+        },
+        {
+          "image": "BDD07.jpg",
+          "repeat": 1,
+          "boxes": 16,
+          "ms": 213.632
+        },
+        {
+          "image": "BDD08.jpg",
+          "repeat": 1,
+          "boxes": 12,
+          "ms": 204.7849
+        },
+        {
+          "image": "BDD09.jpg",
+          "repeat": 1,
+          "boxes": 4,
+          "ms": 224.5511
+        },
+        {
+          "image": "BDD10.jpg",
+          "repeat": 1,
+          "boxes": 13,
+          "ms": 306.857
+        },
+        {
+          "image": "BDD11.jpg",
+          "repeat": 1,
+          "boxes": 13,
+          "ms": 195.3583
+        },
+        {
+          "image": "BDD12.jpg",
+          "repeat": 1,
+          "boxes": 14,
+          "ms": 203.8822
+        },
+        {
+          "image": "BDD13.jpg",
+          "repeat": 1,
+          "boxes": 12,
+          "ms": 312.5996
+        },
+        {
+          "image": "BDD14.jpg",
+          "repeat": 1,
+          "boxes": 7,
+          "ms": 240.5991
+        },
+        {
+          "image": "BDD15.jpg",
+          "repeat": 1,
+          "boxes": 9,
+          "ms": 211.7175
+        },
+        {
+          "image": "BDD16.jpg",
+          "repeat": 1,
+          "boxes": 4,
+          "ms": 191.5721
+        },
+        {
+          "image": "BDD17.jpg",
+          "repeat": 1,
+          "boxes": 10,
+          "ms": 333.7571
+        },
+        {
+          "image": "BDD18.jpg",
+          "repeat": 1,
+          "boxes": 12,
+          "ms": 202.485
+        },
+        {
+          "image": "BDD19.jpg",
+          "repeat": 1,
+          "boxes": 4,
+          "ms": 190.7097
+        },
+        {
+          "image": "BDD20.jpg",
+          "repeat": 1,
+          "boxes": 14,
+          "ms": 175.3061
+        },
+        {
+          "image": "BDD21.jpg",
+          "repeat": 1,
+          "boxes": 8,
+          "ms": 182.4183
+        },
+        {
+          "image": "BDD22.jpg",
+          "repeat": 1,
+          "boxes": 0,
+          "ms": 249.1108
+        },
+        {
+          "image": "BDD23.jpg",
+          "repeat": 1,
+          "boxes": 15,
+          "ms": 192.7998
+        },
+        {
+          "image": "BDD24.jpg",
+          "repeat": 1,
+          "boxes": 13,
+          "ms": 176.7922
+        },
+        {
+          "image": "BDD25.jpg",
+          "repeat": 1,
+          "boxes": 11,
+          "ms": 175.387
+        },
+        {
+          "image": "BDD26.jpg",
+          "repeat": 1,
+          "boxes": 6,
+          "ms": 180.688
+        }
+      ],
+      "model_path": "D:\\Project\\M38-Edge-PreLabeling\\models\\raw\\yolov8s.pt",
+      "model_sha256": "1268458ef67592ae5ce12f1667c4172863203cede9d9693aa4331383307ceff4"
+    },
+    "onnx": {
+      "mean_ms": 140.5772557692308,
+      "p50_ms": 127.25425000000001,
+      "p95_ms": 214.35939499999995,
+      "p99_ms": 229.512763,
+      "sequential_images_per_second": 7.113526256634166,
+      "raw": [
+        {
+          "image": "BDD01.jpg",
+          "repeat": 0,
+          "boxes": 9,
+          "ms": 122.6188
+        },
+        {
+          "image": "BDD02.jpg",
+          "repeat": 0,
+          "boxes": 17,
+          "ms": 133.1603
+        },
+        {
+          "image": "BDD03.jpg",
+          "repeat": 0,
+          "boxes": 9,
+          "ms": 131.5324
+        },
+        {
+          "image": "BDD04.jpg",
+          "repeat": 0,
+          "boxes": 15,
+          "ms": 132.6819
+        },
+        {
+          "image": "BDD05.jpg",
+          "repeat": 0,
+          "boxes": 14,
+          "ms": 126.1018
+        },
+        {
+          "image": "BDD06.jpg",
+          "repeat": 0,
+          "boxes": 4,
+          "ms": 122.4451
+        },
+        {
+          "image": "BDD07.jpg",
+          "repeat": 0,
+          "boxes": 16,
+          "ms": 122.0812
+        },
+        {
+          "image": "BDD08.jpg",
+          "repeat": 0,
+          "boxes": 12,
+          "ms": 122.3442
+        },
+        {
+          "image": "BDD09.jpg",
+          "repeat": 0,
+          "boxes": 4,
+          "ms": 123.8214
+        },
+        {
+          "image": "BDD10.jpg",
+          "repeat": 0,
+          "boxes": 13,
+          "ms": 142.8841
+        },
+        {
+          "image": "BDD11.jpg",
+          "repeat": 0,
+          "boxes": 13,
+          "ms": 145.1115
+        },
+        {
+          "image": "BDD12.jpg",
+          "repeat": 0,
+          "boxes": 14,
+          "ms": 142.2945
+        },
+        {
+          "image": "BDD13.jpg",
+          "repeat": 0,
+          "boxes": 12,
+          "ms": 131.4306
+        },
+        {
+          "image": "BDD14.jpg",
+          "repeat": 0,
+          "boxes": 7,
+          "ms": 128.4651
+        },
+        {
+          "image": "BDD15.jpg",
+          "repeat": 0,
+          "boxes": 9,
+          "ms": 125.5083
+        },
+        {
+          "image": "BDD16.jpg",
+          "repeat": 0,
+          "boxes": 4,
+          "ms": 120.4803
+        },
+        {
+          "image": "BDD17.jpg",
+          "repeat": 0,
+          "boxes": 10,
+          "ms": 221.8653
+        },
+        {
+          "image": "BDD18.jpg",
+          "repeat": 0,
+          "boxes": 12,
+          "ms": 231.2767
+        },
+        {
+          "image": "BDD19.jpg",
+          "repeat": 0,
+          "boxes": 4,
+          "ms": 205.3351
+        },
+        {
+          "image": "BDD20.jpg",
+          "repeat": 0,
+          "boxes": 14,
+          "ms": 127.5186
+        },
+        {
+          "image": "BDD21.jpg",
+          "repeat": 0,
+          "boxes": 8,
+          "ms": 227.818
+        },
+        {
+          "image": "BDD22.jpg",
+          "repeat": 0,
+          "boxes": 0,
+          "ms": 208.2182
+        },
+        {
+          "image": "BDD23.jpg",
+          "repeat": 0,
+          "boxes": 15,
+          "ms": 157.1603
+        },
+        {
+          "image": "BDD24.jpg",
+          "repeat": 0,
+          "boxes": 13,
+          "ms": 165.9378
+        },
+        {
+          "image": "BDD25.jpg",
+          "repeat": 0,
+          "boxes": 11,
+          "ms": 164.3733
+        },
+        {
+          "image": "BDD26.jpg",
+          "repeat": 0,
+          "boxes": 6,
+          "ms": 147.9419
+        },
+        {
+          "image": "BDD01.jpg",
+          "repeat": 1,
+          "boxes": 9,
+          "ms": 185.9833
+        },
+        {
+          "image": "BDD02.jpg",
+          "repeat": 1,
+          "boxes": 17,
+          "ms": 172.4677
+        },
+        {
+          "image": "BDD03.jpg",
+          "repeat": 1,
+          "boxes": 9,
+          "ms": 165.4051
+        },
+        {
+          "image": "BDD04.jpg",
+          "repeat": 1,
+          "boxes": 15,
+          "ms": 144.3938
+        },
+        {
+          "image": "BDD05.jpg",
+          "repeat": 1,
+          "boxes": 14,
+          "ms": 125.2287
+        },
+        {
+          "image": "BDD06.jpg",
+          "repeat": 1,
+          "boxes": 4,
+          "ms": 116.9762
+        },
+        {
+          "image": "BDD07.jpg",
+          "repeat": 1,
+          "boxes": 16,
+          "ms": 112.0765
+        },
+        {
+          "image": "BDD08.jpg",
+          "repeat": 1,
+          "boxes": 12,
+          "ms": 117.1145
+        },
+        {
+          "image": "BDD09.jpg",
+          "repeat": 1,
+          "boxes": 4,
+          "ms": 117.6597
+        },
+        {
+          "image": "BDD10.jpg",
+          "repeat": 1,
+          "boxes": 13,
+          "ms": 118.2731
+        },
+        {
+          "image": "BDD11.jpg",
+          "repeat": 1,
+          "boxes": 13,
+          "ms": 116.1346
+        },
+        {
+          "image": "BDD12.jpg",
+          "repeat": 1,
+          "boxes": 14,
+          "ms": 142.8186
+        },
+        {
+          "image": "BDD13.jpg",
+          "repeat": 1,
+          "boxes": 12,
+          "ms": 124.2555
+        },
+        {
+          "image": "BDD14.jpg",
+          "repeat": 1,
+          "boxes": 7,
+          "ms": 126.8895
+        },
+        {
+          "image": "BDD15.jpg",
+          "repeat": 1,
+          "boxes": 9,
+          "ms": 128.0745
+        },
+        {
+          "image": "BDD16.jpg",
+          "repeat": 1,
+          "boxes": 4,
+          "ms": 124.0878
+        },
+        {
+          "image": "BDD17.jpg",
+          "repeat": 1,
+          "boxes": 10,
+          "ms": 126.9899
+        },
+        {
+          "image": "BDD18.jpg",
+          "repeat": 1,
+          "boxes": 12,
+          "ms": 136.282
+        },
+        {
+          "image": "BDD19.jpg",
+          "repeat": 1,
+          "boxes": 4,
+          "ms": 126.7015
+        },
+        {
+          "image": "BDD20.jpg",
+          "repeat": 1,
+          "boxes": 14,
+          "ms": 125.3696
+        },
+        {
+          "image": "BDD21.jpg",
+          "repeat": 1,
+          "boxes": 8,
+          "ms": 120.7852
+        },
+        {
+          "image": "BDD22.jpg",
+          "repeat": 1,
+          "boxes": 0,
+          "ms": 112.9978
+        },
+        {
+          "image": "BDD23.jpg",
+          "repeat": 1,
+          "boxes": 15,
+          "ms": 119.8911
+        },
+        {
+          "image": "BDD24.jpg",
+          "repeat": 1,
+          "boxes": 13,
+          "ms": 121.9252
+        },
+        {
+          "image": "BDD25.jpg",
+          "repeat": 1,
+          "boxes": 11,
+          "ms": 120.9892
+        },
+        {
+          "image": "BDD26.jpg",
+          "repeat": 1,
+          "boxes": 6,
+          "ms": 129.84
+        }
+      ],
+      "model_path": "D:\\Project\\M38-Edge-PreLabeling\\models\\onnx\\yolov8s.onnx",
+      "model_sha256": "89518584685db3d650f5a9d81df7ac99a8084784ef970f2474860ef1ad187453"
+    },
+    "openvino_fp16": {
+      "mean_ms": 204.6344423076923,
+      "p50_ms": 188.7554,
+      "p95_ms": 313.1479949999999,
+      "p99_ms": 345.9198340000001,
+      "sequential_images_per_second": 4.886762896425719,
+      "raw": [
+        {
+          "image": "BDD01.jpg",
+          "repeat": 0,
+          "boxes": 9,
+          "ms": 235.7352
+        },
+        {
+          "image": "BDD02.jpg",
+          "repeat": 0,
+          "boxes": 17,
+          "ms": 215.0188
+        },
+        {
+          "image": "BDD03.jpg",
+          "repeat": 0,
+          "boxes": 9,
+          "ms": 251.8171
+        },
+        {
+          "image": "BDD04.jpg",
+          "repeat": 0,
+          "boxes": 15,
+          "ms": 246.2417
+        },
+        {
+          "image": "BDD05.jpg",
+          "repeat": 0,
+          "boxes": 14,
+          "ms": 210.65
+        },
+        {
+          "image": "BDD06.jpg",
+          "repeat": 0,
+          "boxes": 4,
+          "ms": 206.5382
+        },
+        {
+          "image": "BDD07.jpg",
+          "repeat": 0,
+          "boxes": 16,
+          "ms": 201.312
+        },
+        {
+          "image": "BDD08.jpg",
+          "repeat": 0,
+          "boxes": 12,
+          "ms": 222.396
+        },
+        {
+          "image": "BDD09.jpg",
+          "repeat": 0,
+          "boxes": 4,
+          "ms": 322.1224
+        },
+        {
+          "image": "BDD10.jpg",
+          "repeat": 0,
+          "boxes": 13,
+          "ms": 169.0578
+        },
+        {
+          "image": "BDD11.jpg",
+          "repeat": 0,
+          "boxes": 13,
+          "ms": 282.5802
+        },
+        {
+          "image": "BDD12.jpg",
+          "repeat": 0,
+          "boxes": 14,
+          "ms": 368.4907
+        },
+        {
+          "image": "BDD13.jpg",
+          "repeat": 0,
+          "boxes": 12,
+          "ms": 305.8053
+        },
+        {
+          "image": "BDD14.jpg",
+          "repeat": 0,
+          "boxes": 7,
+          "ms": 267.9145
+        },
+        {
+          "image": "BDD15.jpg",
+          "repeat": 0,
+          "boxes": 9,
+          "ms": 239.9666
+        },
+        {
+          "image": "BDD16.jpg",
+          "repeat": 0,
+          "boxes": 4,
+          "ms": 202.3863
+        },
+        {
+          "image": "BDD17.jpg",
+          "repeat": 0,
+          "boxes": 11,
+          "ms": 218.3587
+        },
+        {
+          "image": "BDD18.jpg",
+          "repeat": 0,
+          "boxes": 12,
+          "ms": 184.5574
+        },
+        {
+          "image": "BDD19.jpg",
+          "repeat": 0,
+          "boxes": 4,
+          "ms": 207.8481
+        },
+        {
+          "image": "BDD20.jpg",
+          "repeat": 0,
+          "boxes": 14,
+          "ms": 231.4732
+        },
+        {
+          "image": "BDD21.jpg",
+          "repeat": 0,
+          "boxes": 8,
+          "ms": 292.9809
+        },
+        {
+          "image": "BDD22.jpg",
+          "repeat": 0,
+          "boxes": 0,
+          "ms": 324.2341
+        },
+        {
+          "image": "BDD23.jpg",
+          "repeat": 0,
+          "boxes": 15,
+          "ms": 243.0053
+        },
+        {
+          "image": "BDD24.jpg",
+          "repeat": 0,
+          "boxes": 13,
+          "ms": 178.2563
+        },
+        {
+          "image": "BDD25.jpg",
+          "repeat": 0,
+          "boxes": 11,
+          "ms": 174.4799
+        },
+        {
+          "image": "BDD26.jpg",
+          "repeat": 0,
+          "boxes": 6,
+          "ms": 193.3049
+        },
+        {
+          "image": "BDD01.jpg",
+          "repeat": 1,
+          "boxes": 9,
+          "ms": 249.4793
+        },
+        {
+          "image": "BDD02.jpg",
+          "repeat": 1,
+          "boxes": 17,
+          "ms": 166.6991
+        },
+        {
+          "image": "BDD03.jpg",
+          "repeat": 1,
+          "boxes": 9,
+          "ms": 171.1151
+        },
+        {
+          "image": "BDD04.jpg",
+          "repeat": 1,
+          "boxes": 15,
+          "ms": 166.5183
+        },
+        {
+          "image": "BDD05.jpg",
+          "repeat": 1,
+          "boxes": 14,
+          "ms": 163.1174
+        },
+        {
+          "image": "BDD06.jpg",
+          "repeat": 1,
+          "boxes": 4,
+          "ms": 171.3605
+        },
+        {
+          "image": "BDD07.jpg",
+          "repeat": 1,
+          "boxes": 16,
+          "ms": 168.9336
+        },
+        {
+          "image": "BDD08.jpg",
+          "repeat": 1,
+          "boxes": 12,
+          "ms": 165.4326
+        },
+        {
+          "image": "BDD09.jpg",
+          "repeat": 1,
+          "boxes": 4,
+          "ms": 160.8901
+        },
+        {
+          "image": "BDD10.jpg",
+          "repeat": 1,
+          "boxes": 13,
+          "ms": 221.1416
+        },
+        {
+          "image": "BDD11.jpg",
+          "repeat": 1,
+          "boxes": 13,
+          "ms": 224.2327
+        },
+        {
+          "image": "BDD12.jpg",
+          "repeat": 1,
+          "boxes": 14,
+          "ms": 192.9534
+        },
+        {
+          "image": "BDD13.jpg",
+          "repeat": 1,
+          "boxes": 12,
+          "ms": 169.2138
+        },
+        {
+          "image": "BDD14.jpg",
+          "repeat": 1,
+          "boxes": 7,
+          "ms": 158.1465
+        },
+        {
+          "image": "BDD15.jpg",
+          "repeat": 1,
+          "boxes": 9,
+          "ms": 157.2256
+        },
+        {
+          "image": "BDD16.jpg",
+          "repeat": 1,
+          "boxes": 4,
+          "ms": 159.3235
+        },
+        {
+          "image": "BDD17.jpg",
+          "repeat": 1,
+          "boxes": 11,
+          "ms": 167.944
+        },
+        {
+          "image": "BDD18.jpg",
+          "repeat": 1,
+          "boxes": 12,
+          "ms": 166.594
+        },
+        {
+          "image": "BDD19.jpg",
+          "repeat": 1,
+          "boxes": 4,
+          "ms": 152.7091
+        },
+        {
+          "image": "BDD20.jpg",
+          "repeat": 1,
+          "boxes": 14,
+          "ms": 156.5906
+        },
+        {
+          "image": "BDD21.jpg",
+          "repeat": 1,
+          "boxes": 8,
+          "ms": 147.7661
+        },
+        {
+          "image": "BDD22.jpg",
+          "repeat": 1,
+          "boxes": 0,
+          "ms": 158.8144
+        },
+        {
+          "image": "BDD23.jpg",
+          "repeat": 1,
+          "boxes": 15,
+          "ms": 160.8327
+        },
+        {
+          "image": "BDD24.jpg",
+          "repeat": 1,
+          "boxes": 13,
+          "ms": 150.8286
+        },
+        {
+          "image": "BDD25.jpg",
+          "repeat": 1,
+          "boxes": 11,
+          "ms": 162.4259
+        },
+        {
+          "image": "BDD26.jpg",
+          "repeat": 1,
+          "boxes": 6,
+          "ms": 154.1709
+        }
+      ],
+      "model_path": "D:\\Project\\M38-Edge-PreLabeling\\models\\openvino_fp16\\yolov8s_fp16.xml",
+      "model_sha256": "abfcdbca70440416302e5c346d34b0c48fb6c3b578523eaf6e3dae88b035e01d"
+    },
+    "openvino_int8": {
+      "mean_ms": 57.68392884615385,
+      "p50_ms": 56.7298,
+      "p95_ms": 66.008615,
+      "p99_ms": 73.06033700000002,
+      "sequential_images_per_second": 17.335851076771384,
+      "raw": [
+        {
+          "image": "BDD01.jpg",
+          "repeat": 0,
+          "boxes": 9,
+          "ms": 61.9815
+        },
+        {
+          "image": "BDD02.jpg",
+          "repeat": 0,
+          "boxes": 18,
+          "ms": 56.8229
+        },
+        {
+          "image": "BDD03.jpg",
+          "repeat": 0,
+          "boxes": 9,
+          "ms": 54.4293
+        },
+        {
+          "image": "BDD04.jpg",
+          "repeat": 0,
+          "boxes": 16,
+          "ms": 65.9291
+        },
+        {
+          "image": "BDD05.jpg",
+          "repeat": 0,
+          "boxes": 15,
+          "ms": 66.1058
+        },
+        {
+          "image": "BDD06.jpg",
+          "repeat": 0,
+          "boxes": 4,
+          "ms": 55.4639
+        },
+        {
+          "image": "BDD07.jpg",
+          "repeat": 0,
+          "boxes": 19,
+          "ms": 63.4474
+        },
+        {
+          "image": "BDD08.jpg",
+          "repeat": 0,
+          "boxes": 11,
+          "ms": 55.9206
+        },
+        {
+          "image": "BDD09.jpg",
+          "repeat": 0,
+          "boxes": 4,
+          "ms": 59.4435
+        },
+        {
+          "image": "BDD10.jpg",
+          "repeat": 0,
+          "boxes": 12,
+          "ms": 63.7195
+        },
+        {
+          "image": "BDD11.jpg",
+          "repeat": 0,
+          "boxes": 14,
+          "ms": 55.195
+        },
+        {
+          "image": "BDD12.jpg",
+          "repeat": 0,
+          "boxes": 15,
+          "ms": 54.7739
+        },
+        {
+          "image": "BDD13.jpg",
+          "repeat": 0,
+          "boxes": 16,
+          "ms": 50.3735
+        },
+        {
+          "image": "BDD14.jpg",
+          "repeat": 0,
+          "boxes": 8,
+          "ms": 58.1613
+        },
+        {
+          "image": "BDD15.jpg",
+          "repeat": 0,
+          "boxes": 9,
+          "ms": 54.9445
+        },
+        {
+          "image": "BDD16.jpg",
+          "repeat": 0,
+          "boxes": 4,
+          "ms": 55.315
+        },
+        {
+          "image": "BDD17.jpg",
+          "repeat": 0,
+          "boxes": 12,
+          "ms": 56.6367
+        },
+        {
+          "image": "BDD18.jpg",
+          "repeat": 0,
+          "boxes": 11,
+          "ms": 58.176
+        },
+        {
+          "image": "BDD19.jpg",
+          "repeat": 0,
+          "boxes": 4,
+          "ms": 62.3173
+        },
+        {
+          "image": "BDD20.jpg",
+          "repeat": 0,
+          "boxes": 14,
+          "ms": 59.9663
+        },
+        {
+          "image": "BDD21.jpg",
+          "repeat": 0,
+          "boxes": 10,
+          "ms": 54.4493
+        },
+        {
+          "image": "BDD22.jpg",
+          "repeat": 0,
+          "boxes": 0,
+          "ms": 54.8665
+        },
+        {
+          "image": "BDD23.jpg",
+          "repeat": 0,
+          "boxes": 17,
+          "ms": 58.4791
+        },
+        {
+          "image": "BDD24.jpg",
+          "repeat": 0,
+          "boxes": 13,
+          "ms": 59.9902
+        },
+        {
+          "image": "BDD25.jpg",
+          "repeat": 0,
+          "boxes": 10,
+          "ms": 76.1516
+        },
+        {
+          "image": "BDD26.jpg",
+          "repeat": 0,
+          "boxes": 6,
+          "ms": 57.1483
+        },
+        {
+          "image": "BDD01.jpg",
+          "repeat": 1,
+          "boxes": 9,
+          "ms": 56.388
+        },
+        {
+          "image": "BDD02.jpg",
+          "repeat": 1,
+          "boxes": 18,
+          "ms": 52.9893
+        },
+        {
+          "image": "BDD03.jpg",
+          "repeat": 1,
+          "boxes": 9,
+          "ms": 61.301
+        },
+        {
+          "image": "BDD04.jpg",
+          "repeat": 1,
+          "boxes": 16,
+          "ms": 60.313
+        },
+        {
+          "image": "BDD05.jpg",
+          "repeat": 1,
+          "boxes": 15,
+          "ms": 59.1274
+        },
+        {
+          "image": "BDD06.jpg",
+          "repeat": 1,
+          "boxes": 4,
+          "ms": 56.0121
+        },
+        {
+          "image": "BDD07.jpg",
+          "repeat": 1,
+          "boxes": 19,
+          "ms": 50.9741
+        },
+        {
+          "image": "BDD08.jpg",
+          "repeat": 1,
+          "boxes": 11,
+          "ms": 53.3358
+        },
+        {
+          "image": "BDD09.jpg",
+          "repeat": 1,
+          "boxes": 4,
+          "ms": 53.7753
+        },
+        {
+          "image": "BDD10.jpg",
+          "repeat": 1,
+          "boxes": 12,
+          "ms": 54.3733
+        },
+        {
+          "image": "BDD11.jpg",
+          "repeat": 1,
+          "boxes": 14,
+          "ms": 53.5692
+        },
+        {
+          "image": "BDD12.jpg",
+          "repeat": 1,
+          "boxes": 15,
+          "ms": 61.359
+        },
+        {
+          "image": "BDD13.jpg",
+          "repeat": 1,
+          "boxes": 16,
+          "ms": 51.1563
+        },
+        {
+          "image": "BDD14.jpg",
+          "repeat": 1,
+          "boxes": 8,
+          "ms": 57.9368
+        },
+        {
+          "image": "BDD15.jpg",
+          "repeat": 1,
+          "boxes": 9,
+          "ms": 56.853
+        },
+        {
+          "image": "BDD16.jpg",
+          "repeat": 1,
+          "boxes": 4,
+          "ms": 54.7432
+        },
+        {
+          "image": "BDD17.jpg",
+          "repeat": 1,
+          "boxes": 12,
+          "ms": 63.4291
+        },
+        {
+          "image": "BDD18.jpg",
+          "repeat": 1,
+          "boxes": 11,
+          "ms": 52.3722
+        },
+        {
+          "image": "BDD19.jpg",
+          "repeat": 1,
+          "boxes": 4,
+          "ms": 59.8623
+        },
+        {
+          "image": "BDD20.jpg",
+          "repeat": 1,
+          "boxes": 14,
+          "ms": 51.9789
+        },
+        {
+          "image": "BDD21.jpg",
+          "repeat": 1,
+          "boxes": 10,
+          "ms": 58.575
+        },
+        {
+          "image": "BDD22.jpg",
+          "repeat": 1,
+          "boxes": 0,
+          "ms": 56.354
+        },
+        {
+          "image": "BDD23.jpg",
+          "repeat": 1,
+          "boxes": 17,
+          "ms": 50.4631
+        },
+        {
+          "image": "BDD24.jpg",
+          "repeat": 1,
+          "boxes": 13,
+          "ms": 70.0903
+        },
+        {
+          "image": "BDD25.jpg",
+          "repeat": 1,
+          "boxes": 10,
+          "ms": 57.7847
+        },
+        {
+          "image": "BDD26.jpg",
+          "repeat": 1,
+          "boxes": 6,
+          "ms": 54.2399
+        }
+      ],
+      "model_path": "D:\\Project\\M38-Edge-PreLabeling\\models\\openvino_int8_rgb\\yolov8s_int8.xml",
+      "model_sha256": "4a81093cecb84b800654dedd1f8b0c217d842a8ed5ef4db0b5ec807b4e61641f"
+    }
+  }
+}

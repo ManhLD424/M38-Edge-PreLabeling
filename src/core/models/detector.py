@@ -22,7 +22,7 @@ class DetectorConfig:
     score_thresh: float = 0.30
     heading_mode: str = "kitti"       # "kitti" or "forward"
     z_bottom: bool = True             # KITTI checkpoint z is bottom face
-    classes: List[str] = field(default_factory=lambda: ["vehicles", "pedestrian", "two-wheels"])
+    classes: List[str] = field(default_factory=lambda: ["pedestrian", "two-wheels", "vehicles"])
     checkpoint_path: Optional[str] = None
     use_fallback_clustering: bool = True  # Allows offline/edge inference if .pth not present
 
@@ -41,7 +41,7 @@ class PointPillarsDetector:
             return
         ckpt_p = Path(self.config.checkpoint_path)
         if not ckpt_p.is_file():
-            return
+            raise FileNotFoundError(f'PointPillars checkpoint not found: {ckpt_p}')
 
         try:
             import torch
@@ -59,9 +59,9 @@ class PointPillarsDetector:
                 model.eval()
                 self.model = model
             except ImportError:
-                self.model = None
-        except Exception:
-            self.model = None
+                raise RuntimeError('PointPillars dependencies are required for a learned checkpoint')
+        except Exception as exc:
+            raise RuntimeError(f'Failed to load PointPillars checkpoint: {ckpt_p}') from exc
 
     def detect(
         self,
@@ -83,6 +83,8 @@ class PointPillarsDetector:
             return []
 
         xyz = points[:, :3]
+        if not np.isfinite(points).all():
+            raise ValueError('Point cloud contains non-finite coordinates')
         if z_ground is None:
             z_ground = estimate_ground(xyz)
 
@@ -93,9 +95,20 @@ class PointPillarsDetector:
         raw_boxes: List[Cuboid3D] = []
 
         if self.model is not None:
-            raw_boxes = self._detect_pytorch(xyz, z_ground, passes)
+            raw_boxes = self._detect_pytorch(points, z_ground, passes)
         elif self.config.use_fallback_clustering:
             raw_boxes = self._detect_edge_clusters(xyz, z_ground)
+            if full_scene:
+                rear = xyz.copy()
+                rear[:, :2] *= -1
+                for box in self._detect_edge_clusters(rear, z_ground):
+                    box.x, box.y = -box.x, -box.y
+                    box.yaw = math.atan2(math.sin(box.yaw+math.pi), math.cos(box.yaw+math.pi))
+                    raw_boxes.append(box)
+        else:
+            raise RuntimeError('No learned detector loaded and heuristic backend is disabled')
+
+        raw_boxes = [box for box in raw_boxes if box.score >= self.config.score_thresh]
 
         # Post-processing: deduplication and hierarchical filtering
         merged = merge_boxes(raw_boxes)
@@ -185,8 +198,9 @@ class PointPillarsDetector:
                 yaw = float(math.atan2(major_vec[1], major_vec[0]))
 
                 # Clamp dimensions to vehicle standards
-                dx = float(np.clip(max(raw_dx, raw_dy), 2.8, 5.8))
-                dy = float(np.clip(min(raw_dx, raw_dy), 1.4, 2.3))
+                minor_vec = eigenvecs[:, 0]
+                dx = float(np.clip(np.ptp(xy_centered @ major_vec), 2.8, 5.8))
+                dy = float(np.clip(np.ptp(xy_centered @ minor_vec), 1.4, 2.3))
                 dz = float(np.clip(dz, 1.2, 2.2))
 
                 boxes.append(Cuboid3D(
@@ -231,7 +245,7 @@ class PointPillarsDetector:
                     x, y = -x, -y
                 zm = z_to_model(z, z_ground, delta)
                 if xmin < x < xmax and ymin < y < ymax and zmin < zm < zmax:
-                    rows.append((x, y, zm, 0.0))
+                    rows.append((x, y, zm, float(pt[3]) if len(pt) >= 4 else 0.0))
 
             if not rows:
                 continue

@@ -33,7 +33,7 @@ class CVAT3DClient:
     def from_config_or_file(
         cls,
         config_path: Optional[Union[str, Path]] = None,
-        token_txt_path: Optional[Union[str, Path]] = r"d:\Project\VinPrj\CVAT.txt"
+        token_txt_path: Optional[Union[str, Path]] = None
     ) -> CVAT3DClient:
         """Initializes client by reading token from config file or CVAT.txt."""
         base_url = "https://cvat.note.transformerlabs.ai"
@@ -110,7 +110,7 @@ class CVAT3DClient:
         if r.status_code != 200:
             raise RuntimeError(f"Lỗi lấy danh mục nhãn Job {job_id}: {r.status_code}")
         data = r.json()
-        return data.get("results", data if isinstance(data, list) else [])
+        return data if isinstance(data, list) else data.get("results", [])
 
     def get_annotations(self, job_id: int) -> Dict[str, Any]:
         """Fetches current annotations for a Job."""
@@ -126,6 +126,13 @@ class CVAT3DClient:
         mode: str = "merge"
     ) -> Dict[str, Any]:
         """Uploads annotations to Job (mode: 'merge' or 'replace')."""
+        actions = {'merge': 'create', 'create': 'create', 'update': 'update'}
+        if mode not in (*actions, 'replace'):
+            raise ValueError('mode must be create, merge, update or replace')
+        if 'version' not in payload:
+            raise ValueError('An explicit current CVAT annotation version is required')
+        if mode in ('merge', 'create') and any('id' in item for key in ('shapes','tracks','tags') for item in payload.get(key, [])):
+            raise ValueError('Create payload must not contain server object IDs')
         if mode == "replace":
             # PUT replaces all annotations
             r = self.session.put(
@@ -137,7 +144,7 @@ class CVAT3DClient:
         else:
             # PATCH action=update merges new shapes
             r = self.session.patch(
-                self._url(f"jobs/{job_id}/annotations?action=update"),
+                self._url(f"jobs/{job_id}/annotations?action={actions[mode]}"),
                 json=payload,
                 headers=self._headers(),
                 timeout=self.timeout

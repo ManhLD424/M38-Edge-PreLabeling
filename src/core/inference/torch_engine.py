@@ -20,6 +20,9 @@ class TorchInferenceEngine(BaseInferenceEngine):
         self.load_model()
 
     def load_model(self) -> None:
+        from pathlib import Path
+        if not Path(self.model_path).is_file():
+            raise FileNotFoundError(f'Missing PyTorch model: {self.model_path}')
         self.model = YOLO(self.model_path)
 
     def predict(self, image: np.ndarray) -> List[Detection]:
@@ -28,6 +31,10 @@ class TorchInferenceEngine(BaseInferenceEngine):
             conf=self.conf_thresh,
             iou=self.iou_thresh,
             device=self.device,
+            imgsz=640,
+            rect=False,
+            agnostic_nms=False,
+            max_det=300,
             verbose=False
         )
 

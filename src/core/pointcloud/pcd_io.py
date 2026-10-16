@@ -40,100 +40,65 @@ class PCDData:
 
 
 def read_pcd(path: Union[str, Path]) -> PCDData:
-    """Reads a PCD file (supports both DATA binary and DATA ascii)."""
-    p = Path(path)
-    if not p.is_file():
-        raise FileNotFoundError(f"PCD file not found: {p}")
-
-    raw = p.read_bytes()
-    marker_bin = b"DATA binary\n"
-    marker_ascii = b"DATA ascii\n"
-
-    is_binary = True
-    marker_idx = raw.find(marker_bin)
-    if marker_idx >= 0:
-        header_bytes = raw[:marker_idx]
-        body_bytes = raw[marker_idx + len(marker_bin):]
-    else:
-        marker_idx = raw.find(marker_ascii)
-        if marker_idx >= 0:
-            is_binary = False
-            header_bytes = raw[:marker_idx]
-            body_bytes = raw[marker_idx + len(marker_ascii):]
-        else:
-            raise ValueError(f"Unsupported or invalid PCD file (missing DATA header): {p.name}")
-
-    header_text = header_bytes.decode("ascii", errors="replace")
-    header_dict: Dict[str, Any] = {}
-    for line in header_text.splitlines():
-        line = line.strip()
-        if not line or line.startswith("#"):
+    """Parse binary/ASCII PCD with SIZE/TYPE/COUNT and named XYZ fields."""
+    import io
+    stream = io.BytesIO(Path(path).read_bytes())
+    header = {}
+    while True:
+        line = stream.readline()
+        if not line:
+            raise ValueError('PCD missing DATA header')
+        parts = line.decode('ascii').strip().split()
+        if not parts or parts[0].startswith('#'):
             continue
-        parts = line.split()
-        header_dict[parts[0].upper()] = parts[1:]
-
-    fields = header_dict.get("FIELDS", ["x", "y", "z"])
-    count = int(header_dict.get("POINTS", [0])[0])
-    sizes = [int(s) for s in header_dict.get("SIZE", [4] * len(fields))]
-    types = header_dict.get("TYPE", ["F"] * len(fields))
-
-    record_size = sum(sizes)
-
-    if is_binary:
-        if len(body_bytes) < count * record_size:
-            count = len(body_bytes) // record_size
-        
-        # Check standard 4-float fields (e.g. x y z rgb or x y z intensity)
-        if fields[:3] == ["x", "y", "z"]:
-            if len(fields) >= 4 and record_size == 16:
-                arr = np.frombuffer(body_bytes[:count * 16], dtype=np.float32).reshape(-1, 4)
-                points = arr[:, :3].copy()
-                extra = arr[:, 3].copy()
-                return PCDData(
-                    points=points,
-                    fields=fields,
-                    count=len(points),
-                    header=header_dict,
-                    intensity=extra,
-                )
-            elif len(fields) == 3 and record_size == 12:
-                points = np.frombuffer(body_bytes[:count * 12], dtype=np.float32).reshape(-1, 3).copy()
-                return PCDData(
-                    points=points,
-                    fields=fields,
-                    count=len(points),
-                    header=header_dict,
-                )
-        
-        # Generic unpack
-        fmt = "<" + "".join("f" if t == "F" else "I" for t in types)
-        step = struct.calcsize(fmt)
-        pts = []
-        for offset in range(count):
-            unpacked = struct.unpack_from(fmt, body_bytes, offset * step)
-            pts.append(unpacked[:3])
-        points = np.asarray(pts, dtype=np.float32)
-        return PCDData(
-            points=points,
-            fields=fields,
-            count=len(points),
-            header=header_dict,
-        )
+        header[parts[0].upper()] = parts[1:]
+        if parts[0].upper() == 'DATA':
+            break
+    fields = header.get('FIELDS', [])
+    if not all(axis in fields for axis in ('x','y','z')) or len(set(fields)) != len(fields):
+        raise ValueError('PCD requires unique x/y/z fields')
+    sizes = list(map(int,header.get('SIZE',['4']*len(fields))))
+    types = header.get('TYPE',['F']*len(fields))
+    counts = list(map(int,header.get('COUNT',['1']*len(fields))))
+    if not len(fields)==len(sizes)==len(types)==len(counts) or any(c<=0 for c in counts):
+        raise ValueError('Invalid PCD field schema')
+    count = int(header.get('POINTS',[int(header.get('WIDTH',[0])[0])*int(header.get('HEIGHT',[1])[0])])[0])
+    if count < 0:
+        raise ValueError('Invalid PCD point count')
+    mapping = {('F',4):'<f4',('F',8):'<f8',('I',1):'i1',('I',2):'<i2',('I',4):'<i4',
+               ('U',1):'u1',('U',2):'<u2',('U',4):'<u4'}
+    try:
+        dtype = np.dtype([(name,mapping[(kind,size)],(n,)) if n>1 else (name,mapping[(kind,size)])
+                          for name,size,kind,n in zip(fields,sizes,types,counts)])
+    except KeyError as exc:
+        raise ValueError('Unsupported PCD numeric type') from exc
+    body = stream.read()
+    mode = header['DATA'][0]
+    if mode == 'binary':
+        if len(body) < count*dtype.itemsize:
+            raise ValueError('PCD binary data truncated')
+        data = np.frombuffer(body[:count*dtype.itemsize],dtype=dtype,count=count)
+        columns = {name:data[name] for name in fields}
+    elif mode == 'ascii':
+        if count == 0:
+            columns = {name:np.empty((0,)) for name in fields}
+        else:
+            values = np.loadtxt(io.BytesIO(body),dtype=np.float64,ndmin=2)
+            if values.shape != (count,sum(counts)):
+                raise ValueError('PCD ASCII dimensions do not match header')
+            columns = {};offset=0
+            for name,n in zip(fields,counts):
+                columns[name] = values[:,offset] if n==1 else values[:,offset:offset+n]
+                offset += n
     else:
-        # ASCII parsing
-        lines = body_bytes.decode("utf-8", errors="replace").strip().splitlines()
-        pts = []
-        for line in lines[:count]:
-            vals = [float(v) for v in line.split()[:3]]
-            if len(vals) == 3:
-                pts.append(vals)
-        points = np.asarray(pts, dtype=np.float32)
-        return PCDData(
-            points=points,
-            fields=fields,
-            count=len(points),
-            header=header_dict,
-        )
+        raise ValueError(f'Unsupported PCD DATA encoding: {mode}')
+    if any(counts[fields.index(axis)]!=1 for axis in ('x','y','z')):
+        raise ValueError('XYZ fields must be scalars')
+    xyz = np.column_stack([columns[axis] for axis in ('x','y','z')]).astype(np.float32)
+    if not np.isfinite(xyz).all():
+        raise ValueError('PCD contains non-finite XYZ values')
+    return PCDData(points=xyz,fields=fields,count=count,header=header,
+                   intensity=columns.get('intensity'),rgb=columns.get('rgb'))
 
 
 def write_pcd(path: Union[str, Path], points: np.ndarray, binary: bool = True) -> None:

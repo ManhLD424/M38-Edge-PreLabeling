@@ -39,22 +39,18 @@ class ModelQuantizer:
             image_extensions = ("*.jpg", "*.jpeg", "*.png", "*.bmp")
             image_files = []
             for ext in image_extensions:
-                image_files.extend(list(Path(calib_dir).glob(ext)))
+                image_files.extend(sorted(Path(calib_dir).glob(ext)))
 
             for img_path in image_files[:subset_size]:
                 img = cv2.imread(str(img_path))
                 if img is None:
                     continue
-                img = cv2.resize(img, (640, 640))
-                img = img.astype(np.float32) / 255.0
-                img = np.transpose(img, (2, 0, 1)) # HWC -> CHW
-                img = np.expand_dims(img, axis=0)  # BCHW
-                data.append(img)
+                from src.core.inference.preprocessing import prepare_image
+                data.append(prepare_image(img)[0])
 
         # Nếu không có đủ ảnh thật, sinh dữ liệu synthetic để đảm bảo calibration chạy được
-        if len(data) < 10:
-            print(f"[i] Tập calibration có {len(data)} ảnh thật. Bổ sung dữ liệu synthetic ({subset_size} mẫu)...")
-            data = [np.random.uniform(0.0, 1.0, (1, 3, 640, 640)).astype(np.float32) for _ in range(subset_size)]
+        if subset_size <= 0 or not data:
+            raise ValueError('Real calibration images are required; random noise calibration is disabled')
 
         return data
 
@@ -79,7 +75,7 @@ class ModelQuantizer:
             calibration_dataset=calibration_dataset,
             preset=nncf.QuantizationPreset.PERFORMANCE,
             target_device=nncf.TargetDevice.CPU,
-            subset_size=subset_size
+            subset_size=len(calib_data)
         )
 
         dest_xml = out_path / f"{self.xml_path.stem.replace('_fp16', '')}_int8.xml"

@@ -62,6 +62,9 @@ models/openvino_int8/*.bin
 models/openvino_int8/*.xml
 *.pth
 *.onnx
+!docs/models/yolov8s.onnx
+models/openvino_int8_rgb/*.xml
+models/openvino_int8_rgb/*.bin
 *.engine
 
 # Datasets and bulk images

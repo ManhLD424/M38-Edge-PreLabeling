@@ -15,9 +15,15 @@ class CVAT3DAdapter:
         """
         self.label_mapping = label_mapping or {}
 
+    def _label_id(self, cuboid):
+        label_id = cuboid.label_id if cuboid.label_id is not None else self.label_mapping.get(cuboid.class_name)
+        if not isinstance(label_id, int) or label_id <= 0:
+            raise ValueError(f'Explicit CVAT label mapping required for {cuboid.class_name}')
+        return label_id
+
     def to_shape_dict(self, cuboid: Cuboid3D, frame: int = 0) -> Dict[str, Any]:
         """Creates a single CVAT 3D shape dictionary."""
-        label_id = cuboid.label_id or self.label_mapping.get(cuboid.class_name, 1)
+        label_id = self._label_id(cuboid)
         return {
             "type": "cuboid",
             "frame": frame,
@@ -28,10 +34,8 @@ class CVAT3DAdapter:
             "rotation": 0.0,
             "points": cuboid.to_cvat_points(),
             "label_id": label_id,
-            "attributes": [
-                {"name": "confidence", "value": f"{cuboid.score:.3f}"},
-                {"name": "class_name", "value": cuboid.class_name}
-            ]
+            "source": "auto",
+            "attributes": []
         }
 
     def to_shapes_payload(self, cuboids: List[Cuboid3D], frame: int = 0) -> Dict[str, Any]:
@@ -47,19 +51,17 @@ class CVAT3DAdapter:
     def to_tracks_payload(self, cuboids_by_frame: Dict[int, List[Cuboid3D]]) -> Dict[str, Any]:
         """Generates sequence tracks payload (compatible with CVAT-3D-Copilot extension)."""
         tracks = []
-        track_id = 1
+        if len(cuboids_by_frame) > 1:
+            raise ValueError('Multi-frame tracks require explicit object association; use per-frame shapes')
         for frame, cuboids in sorted(cuboids_by_frame.items()):
             for c in cuboids:
-                label_id = c.label_id or self.label_mapping.get(c.class_name, 1)
+                label_id = self._label_id(c)
                 tracks.append({
-                    "id": track_id,
                     "label_id": label_id,
                     "frame": frame,
                     "group": 0,
                     "source": "semi-auto",
-                    "attributes": [
-                        {"spec_id": 1, "value": c.class_name}
-                    ],
+                    "attributes": [],
                     "shapes": [
                         {
                             "type": "cuboid",
@@ -74,7 +76,6 @@ class CVAT3DAdapter:
                         }
                     ]
                 })
-                track_id += 1
 
         return {
             "version": 0,

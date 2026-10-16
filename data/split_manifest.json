@@ -1,0 +1,112 @@
+{
+  "schema": "m38-image-split-v1",
+  "purpose": "demonstration only; no annotated GT or scene provenance",
+  "calibration": [
+    {
+      "name": "BDD11.jpg",
+      "sha256": "11874cf7c4d487cd173e1f31be08f1020a0ca13ce696250d4092d3a84747ecd1"
+    },
+    {
+      "name": "BDD04.jpg",
+      "sha256": "1a85912736d12620e6cd108a425d54acfae812a89c62b7cf655d5ce8f8a3ac7c"
+    },
+    {
+      "name": "BDD02.jpg",
+      "sha256": "1b8ba083ddc90c60e9804acf4fbbe83d1c1ccf8b7672630fef7043e588adbec5"
+    },
+    {
+      "name": "BDD21.jpg",
+      "sha256": "1be72fc0bdcf103ec271ed071551489ce1f22109f0f74ee9c35af83f1889a3c2"
+    },
+    {
+      "name": "BDD09.jpg",
+      "sha256": "1f1b90ae3190acd8f63d24693d2ef940bbce5c27bd460c9949bec3e27f5562db"
+    },
+    {
+      "name": "BDD17.jpg",
+      "sha256": "20d4f967904949769b6a3f38d654209352de7f23454d84495fc5fe87a438c51b"
+    },
+    {
+      "name": "BDD19.jpg",
+      "sha256": "26da8a8375ebd956a5c82562072cb78ca3fc900e76aade5d8943c3dcd2954f41"
+    },
+    {
+      "name": "BDD01.jpg",
+      "sha256": "2d1bf9fc1063651911c8ab531a3f70ddec83c45c7cb6c8d905e7b3685e481983"
+    },
+    {
+      "name": "BDD05.jpg",
+      "sha256": "2f33a25a7c0502eac3ab212ce3cad78b8c0d85deb34b9e834dfa8f5e7e4ba841"
+    },
+    {
+      "name": "BDD16.jpg",
+      "sha256": "2fd1efe106b20710b4fb53ed126b139ee8e73d5ca9c1b6abfa600fbc159fe71c"
+    },
+    {
+      "name": "BDD24.jpg",
+      "sha256": "30c679505c43fdcba67da109bbe6b5a90cc6410d514eba3fc6cca461ab8047e7"
+    },
+    {
+      "name": "BDD06.jpg",
+      "sha256": "36b5b9314c026783a7efb0b37b7535a21453a34098dc61fc617e838b567b4a7b"
+    },
+    {
+      "name": "BDD18.jpg",
+      "sha256": "3dafca9350bea75b8f82583ce632215407b910d0e1489c0b1481cb21bd38a433"
+    },
+    {
+      "name": "BDD07.jpg",
+      "sha256": "4cc74cf6150e5271265b4967c3a71dc6a8bf756f21f3953a9f83131a03b09e91"
+    },
+    {
+      "name": "BDD10.jpg",
+      "sha256": "56c7bed1bccc2ce553d5e58b5d124a5363255ffdc020f15f4f55c3af517a1686"
+    },
+    {
+      "name": "BDD13.jpg",
+      "sha256": "5917959991e2200838161b3308c1b4f71632f25890f25b6c25bbc2f1bba4e4ba"
+    }
+  ],
+  "holdout": [
+    {
+      "name": "BDD20.jpg",
+      "sha256": "742b11a06add4d5f3429bd836ef448a587b1dc68739e704a25194f960f21a69a"
+    },
+    {
+      "name": "BDD26.jpg",
+      "sha256": "97d0412d33b6f3fd2b129e4f2394d0887d4c16df5aa83ce604878d4c912a0ff0"
+    },
+    {
+      "name": "BDD25.jpg",
+      "sha256": "98fb320badb8d026a5c9db799fc726b374aec4892a5148ec917536207c0634fb"
+    },
+    {
+      "name": "BDD22.jpg",
+      "sha256": "9a6b8bf14ab82908f1d0b42d27be877389b333ab94304304b48ead2188f38de9"
+    },
+    {
+      "name": "BDD14.jpg",
+      "sha256": "a64fde81f45fa9800b45f2611198d660b7f470f1858739d0f2199fef486a0cfb"
+    },
+    {
+      "name": "BDD12.jpg",
+      "sha256": "bc40b4e2e3ae25ea2e53e331ec1ab701a62eef19c27402de22c6316d5dd4e379"
+    },
+    {
+      "name": "BDD15.jpg",
+      "sha256": "ce38379e75e7ceb168c5d015f35c1778b193b9cc41dd32fd0ea7b0f4f7eed38d"
+    },
+    {
+      "name": "BDD03.jpg",
+      "sha256": "deafb8c1f4f24a0b448d6fe091dae0a9a6f0351c9f272208d18c618028ab4b13"
+    },
+    {
+      "name": "BDD08.jpg",
+      "sha256": "e5944c409118c9ca77c36c8053c502a60a40accd00cf0b90d2a1c7e4f4b6aa65"
+    },
+    {
+      "name": "BDD23.jpg",
+      "sha256": "e7ce0f413af6181791775dc64c92db09e12111a1a69456b1a8c5a98fff90cfe6"
+    }
+  ]
+}

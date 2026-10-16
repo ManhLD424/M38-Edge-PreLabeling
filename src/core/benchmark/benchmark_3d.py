@@ -80,7 +80,8 @@ class Benchmark3D:
             detect_times.append((t3 - t2) * 1000)
 
             # 4. CVAT Formatting
-            _ = self.adapter.to_shapes_payload(cuboids)
+            # Benchmark serialization only; no fabricated server ontology IDs.
+            _ = [c.to_dict() for c in cuboids]
             t4 = time.perf_counter()
             cvat_times.append((t4 - t3) * 1000)
 

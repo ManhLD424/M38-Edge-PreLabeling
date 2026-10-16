@@ -65,6 +65,6 @@ def test_accuracy_benchmark_evaluation(tmp_path):
     assert res["total_images"] == 1
     assert res["ref_total_boxes"] == 2
     assert res["cand_total_boxes"] == 2
-    assert res["map_50"] == 100.0
+    assert res["f1_at_50_percent"] == 100.0
     assert res["mean_matched_iou"] > 0.85
-    assert res["map_drop_percentage_points"] == 0.0
+    assert res["retention_at_50_percent"] == 100.0
