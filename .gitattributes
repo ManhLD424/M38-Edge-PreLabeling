@@ -8,3 +8,4 @@ docs/vendor/*.mjs text eol=lf
 
 *.pdf binary
 *.pptx binary
+*.mp4 binary

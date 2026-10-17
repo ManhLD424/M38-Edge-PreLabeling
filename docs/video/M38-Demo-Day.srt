@@ -1,0 +1,39 @@
+1
+00:00:00,000 --> 00:00:10,000
+M38 hỗ trợ tạo nhãn gợi ý trên CPU, rồi để con người kiểm sửa trước khi xuất dữ liệu.
+
+2
+00:00:10,000 --> 00:00:22,000
+Chọn ảnh mẫu hoặc mở ảnh riêng. Chế độ ONNX Browser xử lý ảnh ngay trên thiết bị, không gửi ảnh lên server.
+
+3
+00:00:22,000 --> 00:00:34,000
+Bấm Chạy prelabel. Trong lần demo này, ONNX WASM CPU trả 9 hộp trên BDD01. Đoạn chờ đã được cắt.
+
+4
+00:00:34,000 --> 00:00:44,000
+Browser báo 1.439,6 ms cho lần chạy này, chưa tính tải model. Tốc độ thay đổi theo thiết bị và runtime.
+
+5
+00:00:44,000 --> 00:00:58,000
+Chọn hộp trong danh sách và sửa X trái từ 0,1 thành 8 để minh họa thao tác. Đây chưa phải xác nhận hộp đúng ground truth.
+
+6
+00:00:58,000 --> 00:01:10,000
+Sau thao tác kiểm sửa, xuất 1 ảnh với 9 hộp theo CVAT for images 1.1. Tên ảnh và nhãn cần khớp task CVAT.
+
+7
+00:01:10,000 --> 00:01:24,000
+Benchmark 4 threads, 26 ảnh × 3 lượt: INT8 đạt mean 38,80 ms, tỷ số latency nhanh hơn PyTorch 3,96 lần trong phép đo này.
+
+8
+00:01:24,000 --> 00:01:36,000
+Artifact INT8 là 11,24 MiB, ONNX là 42,79 MiB. Dung lượng file không phải RAM. Benchmark Python khác phép đo browser.
+
+9
+00:01:36,000 --> 00:01:50,000
+INT8 ghép được 94 trên 97 hộp PyTorch ở IoU từ 0,5. Đây là độ đồng thuận giữa model, chưa phải mAP ground truth.
+
+10
+00:01:50,000 --> 00:02:00,000
+Mở Studio để dùng thử và trang kết quả để kiểm tra log. Bước tiếp theo: mAP thật, RAM đỉnh và pilot thời gian annotator.
