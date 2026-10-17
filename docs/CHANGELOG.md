@@ -2,6 +2,10 @@
 
 ## Unreleased - Demo Day materials, 2026-10-18
 
+### Changed
+
+- Replaced the main video preview with a genuine 1080p screencast, Vietnamese burned-in captions and separate SRT/timecodes; no narration or music. Retained raw footage and cut decisions locally.
+
 ### Added
 
 - Seven-slide PDF and editable PPTX with PTQ pipeline, CPU benchmark conditions, public/local runtime boundaries and unmeasured BDD100K quality metrics.

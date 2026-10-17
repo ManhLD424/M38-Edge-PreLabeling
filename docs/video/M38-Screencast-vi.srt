@@ -1,0 +1,154 @@
+1
+00:00:00,000 --> 00:00:06,000
+M38: tối ưu mô hình để tạo nhãn gợi ý trên laptop/edge.
+Model Compression for Edge Pre-Labeling
+
+2
+00:00:06,000 --> 00:00:10,000
+Footage thao tác thật, đã cắt các khoảng chờ.
+Không thêm giọng đọc hoặc chuyển động chuột giả.
+
+3
+00:00:10,000 --> 00:00:18,000
+Studio local có bốn runtime CPU chạy thật.
+Các mục “Kết quả đã chạy” bên dưới chỉ là replay.
+
+4
+00:00:18,000 --> 00:00:22,000
+Chọn PyTorch · CPU local trên ảnh BDD01.
+Giữ cùng ảnh để minh họa các runtime.
+
+5
+00:00:22,000 --> 00:00:25,000
+Bấm Chạy Prelabel và chờ inference hoàn tất.
+Nút chạy tạm khóa trong khi xử lý.
+
+6
+00:00:25,000 --> 00:00:34,000
+Các hộp xuất hiện cùng nhãn “Local torch”.
+Timing lần bấm này không thay benchmark sau warmup.
+
+7
+00:00:34,000 --> 00:00:41,000
+Mở menu runtime để chuyển sang ONNX Runtime.
+Đây vẫn là backend CPU local.
+
+8
+00:00:41,000 --> 00:00:49,000
+Chọn ONNX Runtime · CPU local.
+Ảnh vẫn là BDD01; chưa dùng kết quả replay.
+
+9
+00:00:49,000 --> 00:00:54,000
+Bấm chạy mới và chờ các hộp xuất hiện.
+Mỗi lần chạy được gắn với đúng ảnh và runtime.
+
+10
+00:00:54,000 --> 00:01:03,000
+Kiểm tra dòng “Local onnx” dưới vùng ảnh.
+Thời gian nạp model và latency từng lần có thể khác nhau.
+
+11
+00:01:03,000 --> 00:01:13,000
+Chọn OpenVINO FP16 · CPU local.
+Tiếp tục dùng cùng ảnh đầu vào.
+
+12
+00:01:13,000 --> 00:01:22,000
+Bấm Chạy Prelabel để thực hiện inference FP16 mới.
+Chờ trạng thái xử lý kết thúc.
+
+13
+00:01:22,000 --> 00:01:27,500
+Kết quả hiện nhãn “Local openvino_fp16”.
+Các hộp là gợi ý và cần người kiểm tra.
+
+14
+00:01:27,500 --> 00:01:35,500
+Tiếp theo là model lượng tử hóa OpenVINO INT8.
+INT8 hiện được triển khai ở định dạng OpenVINO IR.
+
+15
+00:01:35,500 --> 00:01:46,500
+Chọn INT8 rồi bấm Chạy Prelabel.
+Giữ lại thao tác chọn runtime và click chạy thật.
+
+16
+00:01:46,500 --> 00:01:56,500
+Kết quả mới hiển thị “Local openvino_int8”.
+Không suy ra chất lượng mAP từ hình minh họa này.
+
+17
+00:01:56,500 --> 00:02:04,500
+Phóng to ảnh lên 125% để quan sát hộp rõ hơn.
+Đây là thao tác zoom thật trong Studio.
+
+18
+00:02:04,500 --> 00:02:13,500
+Bấm chọn hộp chiếc xe ở giữa ảnh.
+Hộp được tô cam và các trường tọa độ được mở.
+
+19
+00:02:13,500 --> 00:02:22,500
+Kéo bên trong hộp để di chuyển.
+Tọa độ thay đổi theo vị trí mới của hộp.
+
+20
+00:02:22,500 --> 00:02:30,500
+Kéo góc dưới bên phải để đổi kích thước.
+Đây là thao tác minh họa, chưa phải nhãn ground truth.
+
+21
+00:02:30,500 --> 00:02:41,000
+Bấm Hoàn tác một lần.
+Hộp trở về kích thước trước lần resize vừa rồi.
+
+22
+00:02:41,000 --> 00:02:47,000
+Có thể chỉnh hộp bằng các trường tọa độ.
+Nhập lại tọa độ trước thao tác kéo để minh họa.
+
+23
+00:02:47,000 --> 00:02:57,000
+Điền các cạnh trái, trên, phải và dưới.
+Chưa áp dụng thì vị trí hộp vẫn giữ nguyên.
+
+24
+00:02:57,000 --> 00:03:06,000
+Bấm Áp dụng để cập nhật hộp trên ảnh.
+Kiểm tra vị trí hiển thị sau khi nhập tọa độ.
+
+25
+00:03:06,000 --> 00:03:14,000
+Cuộn đến phần kiểm ảnh và xuất nhãn.
+Khi sử dụng thực tế, cần kiểm toàn bộ ảnh trước khi đánh dấu.
+
+26
+00:03:14,000 --> 00:03:22,000
+Bấm Đánh dấu đã kiểm trong workflow minh họa.
+Bộ đếm tăng lên 1 ảnh; không phải chứng nhận nhãn đúng GT.
+
+27
+00:03:22,000 --> 00:03:25,500
+Bấm Xuất ảnh này · CVAT XML.
+Studio báo xuất 1 ảnh và 9 hộp đang hiển thị.
+
+28
+00:03:25,500 --> 00:03:34,500
+Edge yêu cầu người dùng xác nhận tải tệp XML.
+Chưa xác nhận tải; chưa thực hiện import/save/reload CVAT.
+
+29
+00:03:34,500 --> 00:03:41,500
+Mở trang Kết quả thực nghiệm của dự án.
+Số trên trang đến từ benchmark nhiều lượt đã lưu.
+
+30
+00:03:41,500 --> 00:03:46,000
+Benchmark CPU: 4 threads, 26 ảnh × 3 lượt sau warmup.
+Kết quả này được đo riêng với latency từng lần bấm UI.
+
+31
+00:03:46,000 --> 00:03:51,300
+Agreement với PyTorch không phải mAP trên ground truth.
+Chưa có mAP drop BDD100K hoặc throughput streaming độc lập.
