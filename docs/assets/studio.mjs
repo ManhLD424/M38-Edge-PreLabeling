@@ -201,7 +201,7 @@ $('runtime').onchange=()=>{
   if(state.isUpload&&current!=='browser'){state.isUpload=false;state.name=Object.keys(state.manifest.images)[0];}
   loadCurrent();
 };
-$('upload').onchange=async()=>{const file=$('upload').files[0];if(!file)return;if(file.size>25*1048576){status('Chọn ảnh nhỏ hơn 25 MB.','error');return;}persist();uploaded=file;state.isUpload=true;state.name=file.name;$('runtime').value='browser';$('runtime').dataset.previous='browser';await loadCurrent();};
+$('upload').onchange=async()=>{const file=$('upload').files[0];if(!file)return;if(file.size>25*1048576){status('Chọn ảnh nhỏ hơn 25 MB.','error');return;}persist();uploaded=file;state.isUpload=true;state.name=file.name;$('runtime').value='browser';$('runtime').dataset.previous='browser';$('runtime-help').textContent='Ảnh riêng chạy ONNX Browser CPU trên thiết bị của bạn.';await loadCurrent();};
 $('review').onclick=()=>{if(!state.ready)return;reviewed.set(state.name,record());$('review-status').textContent='Đã kiểm';$('review-status').classList.add('reviewed');updateActions();status('Đã đánh dấu ảnh này được kiểm với bộ lọc hiện tại.','success');};
 $('export').onclick=()=>{if(state.ready)exportRecords([record()]);};$('export-reviewed').onclick=()=>exportRecords([...reviewed.values()]);
 $('export-session').onclick=()=>download('m38_session.json',JSON.stringify({schema:'m38-review-session-v1',current:state.ready?record():null,reviewed:[...reviewed.values()]},null,2),'application/json');
@@ -214,8 +214,9 @@ async function init(){
     for(const name of names){const b=document.createElement('button');b.textContent=name;b.dataset.name=name;b.className='sample';b.onclick=()=>{persist();state.name=name;state.isUpload=false;loadCurrent();};$('samples').append(b);}
     for(const name of [...new Set([...BDD_LABELS,...COCO_LABELS])]){const o=document.createElement('option');o.value=o.textContent=name;$('label').append(o);}$('label').value='car';
     if(['localhost','127.0.0.1','[::1]'].includes(location.hostname)){
-      try{const caps=await fetch('/api/capabilities');if(caps.ok){const data=await caps.json();for(const runtime of data.runtimes){const o=document.createElement('option');o.value=`local:${runtime}`;o.textContent=`Chạy thật · CPU local ${runtime}`;$('runtime').append(o);}}}catch{}
+      try{const caps=await fetch('/api/capabilities');if(caps.ok){const data=await caps.json();const group=document.createElement('optgroup');group.label='Chạy thật trên laptop · Python CPU';const labels={torch:'PyTorch',onnx:'ONNX Runtime',openvino_fp16:'OpenVINO FP16',openvino_int8:'OpenVINO INT8'};for(const runtime of data.runtimes){if(!labels[runtime])continue;const o=document.createElement('option');o.value=`local:${runtime}`;o.textContent=`${labels[runtime]} · CPU local (chạy thật)`;group.append(o);}$('runtime').prepend(group);if(data.runtimes.includes('openvino_int8')){$('runtime').value='local:openvino_int8';$('runtime').dataset.previous='local:openvino_int8';$('runtime-help').textContent='OpenVINO INT8 chạy thật trên CPU laptop qua server local. Chọn runtime rồi bấm Chạy prelabel; lần đầu có thời gian nạp model.';}}}catch{}
     }
+    if(!['localhost','127.0.0.1','[::1]'].includes(location.hostname))$('runtime-help').textContent='Web public chạy ONNX Browser thật. PyTorch và OpenVINO cần server CPU local: mở Hướng dẫn → Chạy runtime native. Replay chỉ xem kết quả đã lưu.';
     state.name=names[0];await loadCurrent();
   }catch(error){status(error.message,'error');$('overlay').textContent='Không nạp được dữ liệu. Kiểm tra kết nối hoặc bản build.';}
 }

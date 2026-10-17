@@ -2,6 +2,9 @@
 
 ## Unreleased — 2026-10-16 repair
 
+- Clarified public browser versus native laptop runtimes, prioritized live local INT8, added all-runtime live demo scenes and reviewed M38 scope against the supplied brief.
+- Updated narration pronunciation and subtitles; removed the closing roadmap slide and video scene.
+
 - Added a coach-facing results page generated from measured latency, artifact sizes and runtime agreement, with raw sources and explicit unmeasured metrics.
 
 - Replaced hardcoded demo labels with browser ONNX inference and hash-bound per-image replay.

@@ -53,14 +53,21 @@ SCENES = [
   ['Sau khi kiểm toàn bộ hộp và bổ sung vật thể bỏ sót, bấm Đánh dấu đã kiểm. Trong cảnh minh họa, bộ đếm đã tăng thành một ảnh.']),
  ('04-export.png', '09 / Tải CVAT XML', 'Bấm Xuất ảnh này · CVAT XML', 'Thông báo xuất 1 ảnh, 9 hộp', (980,397,1211,440),
   ['Bấm Xuất ảnh này, CVAT XML. Thông báo xác nhận một ảnh và chín hộp. Khi nhập vào CVAT, chọn CVAT for images một chấm một, với tên ảnh và nhãn khớp task.']),
+ ('06-native-torch.png', 'Chạy thật trên laptop / PyTorch', 'Chọn CPU local torch rồi Chạy prelabel', 'Đọc nhãn Chạy thật · Local torch', (30,184,244,238),
+  ['Trên laptop, mở Studio qua server Python local. Chọn PyTorch rồi bấm Chạy Prelabel. Đây là kết quả inference thật trên cùng ảnh, không phải replay.']),
+ ('07-native-onnx.png', 'Chạy thật trên laptop / ONNX Runtime', 'Chọn CPU local onnx rồi chạy lại', 'Đọc nhãn Chạy thật · Local onnx', (30,184,244,238),
+  ['Tiếp theo, chọn ONNX Runtime và chạy trên cùng ảnh. Lần nạp đầu và từng lần chạy có thể khác nhau, nên số tại đây không thay bảng benchmark nhiều lượt.']),
+ ('08-native-fp16.png', 'Chạy thật trên laptop / OpenVINO FP16', 'Chọn CPU local openvino_fp16', 'Bấm chạy để suy luận mới', (30,184,244,238),
+  ['Với OpenVINO FP mười sáu, cũng chọn runtime rồi bấm chạy. Các hộp được tạo mới trên CPU laptop.']),
+ ('09-native-int8.png', 'Chạy thật trên laptop / OpenVINO INT8', 'Chọn CPU local openvino_int8', 'Kết quả mới từ model lượng tử hóa', (30,184,244,238),
+  ['Cuối cùng, chọn OpenVINO INT tám và chạy lại. Model lượng tử hóa vẫn cần người kiểm nhãn. Trang public GitHub chỉ chạy ONNX Browser, vì Pages không có server Python.']),
  ('05-benchmark.png', '10 / Xem kết quả thực nghiệm', 'Mở Kết quả thực nghiệm trên Studio', 'Đọc điều kiện đo trước khi so sánh', (80,204,1170,244),
   ['Trang Kết quả thực nghiệm so sánh các runtime Python CPU. Phép đo dùng bốn threads, hai mươi sáu ảnh và ba lượt đo sau warmup.']),
  ('05-benchmark.png', 'INT8 trong phép đo CPU Python', 'So cùng workload và thread budget', '38,80 ms; tỷ số latency 3,96×', (80,449,1170,504),
   ['INT tám đạt mean latency ba mươi tám phẩy tám mili giây. Tỷ số latency nhanh hơn PyTorch ba phẩy chín sáu lần trong phép đo này. Dung lượng artifact INT tám là mười một phẩy hai bốn MiB, không phải RAM.']),
  ('../demo-day-build/slide-6.png', 'Giới hạn kết luận chất lượng', 'Phân biệt agreement và mAP', 'Cần ground truth độc lập', None,
   ['INT tám ghép được chín mươi bốn trên chín mươi bảy hộp PyTorch tại IoU từ không phẩy năm. Đây là độ đồng thuận giữa model. Dự án chưa có mAP trên ground truth độc lập.']),
- ('../demo-day-build/slide-7.png', 'Dùng thử và kiểm tra dữ liệu', 'Mở Studio và trang kết quả', 'Các link nằm trong phần mô tả video', None,
-  ['Bạn có thể dùng thử Studio và xem dữ liệu gốc trên trang kết quả. Bước tiếp theo là đo mAP thật, RAM đỉnh và thời gian kiểm sửa nhãn của người dùng.']),
+
 ]
 
 
@@ -114,7 +121,7 @@ def render(scene, narration, destination):
     draw_text(draw, 'KẾT QUẢ CẦN THẤY', (1230, y), 21, 335, '#FFAC83', True)
     draw_text(draw, expected, (1230, y+48), 27, 335)
     draw_text(draw, 'Giọng đọc tổng hợp\nTiếng Việt', (1230, 640), 19, 335, '#BBC8D6')
-    height = draw_text(draw, narration, (28, 779), 26, 1540)
+    height = draw_text(draw, narration.replace('M ba tám','M38'), (28, 779), 26, 1540)
     assert height <= 102, f'Subtitle does not fit: {narration}'
     draw_text(draw, 'SAKANA · Cảnh ghép từ thao tác thật · Thời gian chờ đã cắt', (28, 873), 16, 1540, '#BBC8D6')
     frame.save(destination)
@@ -122,10 +129,10 @@ def render(scene, narration, destination):
 
 async def make_voice(index, narration):
     target = BUILD / f'voice-{index:02}.mp3'
-    key = hashlib.sha256((VOICE+narration).encode()).hexdigest()
+    key = hashlib.sha256((VOICE+'pronunciation-v2'+narration).encode()).hexdigest()
     keyfile = target.with_suffix('.sha256')
     if not target.exists() or not keyfile.exists() or keyfile.read_text() != key:
-        await edge_tts.Communicate(narration, VOICE, rate='+0%').save(str(target))
+        await edge_tts.Communicate(narration.replace('M ba tám', 'Mờ ba tám').replace('Prelabel', 'Pre lây bờ').replace('prelabel', 'Pre lây bờ'), VOICE, rate='+0%').save(str(target))
         keyfile.write_text(key)
     return target
 
@@ -177,7 +184,7 @@ async def main():
                 ticks = struct.unpack('>Q', data[pos+24:pos+32])[0]
             duration = ticks / timescale
             clips.append(clip)
-            subtitles.append(f'{number+1}\n{timestamp(elapsed)} --> {timestamp(elapsed+speech_duration)}\n{piece}\n')
+            subtitles.append(f'{number+1}\n{timestamp(elapsed)} --> {timestamp(elapsed+speech_duration)}\n{piece.replace('M ba tám','M38')}\n')
             storyboard.append({'start':round(elapsed,3),'duration':round(duration,3),'title':scene[1],
                                'action':scene[2],'expected':scene[3],'narration':piece,
                                'source':scene[0],'highlight':scene[4]})
@@ -193,10 +200,10 @@ async def main():
     run([FF, '-v', 'error', '-i', str(output), '-f', 'null', '-'])
     (OUT/'M38-Demo-Day-narrated.srt').write_text('\n'.join(subtitles), encoding='utf-8')
     script = ['# M38: video hướng dẫn có giọng đọc tiếng Việt\n',
-              'Giọng tổng hợp: vi-VN-NamMinhNeural. Cảnh ghép từ ảnh chụp thao tác thật, không phải quay liên tục. Thời gian chờ đã cắt. Các khung cam chỉ vị trí cần chú ý.\n',
+              'Cách đọc: M38 = Mờ ba tám; Prelabel = Pre lây bờ. Phụ đề giữ M38 và Prelabel. Giọng tổng hợp: vi-VN-NamMinhNeural. Cảnh ghép từ ảnh chụp thao tác thật, không phải quay liên tục. Thời gian chờ đã cắt. Các khung cam chỉ vị trí cần chú ý.\n',
               '| Bắt đầu | Thao tác | Kết quả cần thấy | Lời đọc |', '|---|---|---|---|']
     for item in storyboard:
-        script.append(f'| {timestamp(item["start"])} | {item["action"]} | {item["expected"]} | {item["narration"]} |')
+        script.append(f'| {timestamp(item["start"])} | {item["action"]} | {item["expected"]} | {item["narration"].replace("M ba tám", "M38")} |')
     script.extend(['\n## Link sản phẩm', 'https://manhld424.github.io/M38-Edge-PreLabeling/',
                    'https://manhld424.github.io/M38-Edge-PreLabeling/results.html'])
     (OUT/'M38-Demo-Day-narrated-script.md').write_text('\n'.join(script), encoding='utf-8')
