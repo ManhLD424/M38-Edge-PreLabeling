@@ -1,0 +1,143 @@
+1
+00:00:00,000 --> 00:00:04,320
+Đây là M ba tám Prelabel Studio của đội Sakana.
+
+2
+00:00:04,670 --> 00:00:10,694
+Công cụ tạo nhãn gợi ý trên CPU, để con người kiểm tra và chỉnh sửa trước khi xuất dữ liệu.
+
+3
+00:00:11,045 --> 00:00:16,109
+Đầu tiên, chọn ảnh B D D không một trong danh sách ảnh mẫu ở bên trái.
+
+4
+00:00:16,462 --> 00:00:21,094
+Kiểm tra tên ảnh ở đầu vùng xem để chắc chắn đang thao tác đúng ảnh.
+
+5
+00:00:21,462 --> 00:00:26,118
+Ở Nguồn suy luận, chọn Chạy thật, ONNX Browser CPU.
+
+6
+00:00:26,468 --> 00:00:31,364
+Với ảnh riêng, trình duyệt xử lý trên thiết bị và không gửi ảnh về server.
+
+7
+00:00:31,718 --> 00:00:34,862
+Tiếp theo, bấm nút Chạy prelabel.
+
+8
+00:00:35,218 --> 00:00:37,642
+Lần đầu cần tải model.
+
+9
+00:00:38,010 --> 00:00:42,042
+Video chuyển thẳng sang kết quả và đã cắt thời gian chờ.
+
+10
+00:00:42,392 --> 00:00:46,976
+Khi hoàn tất, các hộp xuất hiện trên ảnh và trong danh sách bên phải.
+
+11
+00:00:47,326 --> 00:00:49,774
+Lần chạy này có chín hộp.
+
+12
+00:00:50,124 --> 00:00:53,748
+Hãy kiểm tra vật thể bỏ sót và hộp nhận diện sai.
+
+13
+00:00:54,098 --> 00:00:59,690
+Dòng dưới ảnh ghi thời gian browser khoảng một phẩy bốn bốn giây, chưa tính tải model.
+
+14
+00:01:00,057 --> 00:01:03,921
+Đây là phép đo khác với benchmark Python ở phần sau.
+
+15
+00:01:04,271 --> 00:01:08,471
+Để sửa một hộp, bấm hàng đầu tiên trong danh sách bên phải.
+
+16
+00:01:08,821 --> 00:01:13,189
+Studio chọn hộp tương ứng trên ảnh và mở các trường tọa độ.
+
+17
+00:01:13,539 --> 00:01:17,787
+Trong ví dụ này, đổi X trái từ không phẩy một thành tám.
+
+18
+00:01:18,137 --> 00:01:23,129
+Đây là thao tác minh họa, chưa phải khẳng định tọa độ mới đúng với nhãn chuẩn.
+
+19
+00:01:23,479 --> 00:01:27,463
+Sau khi nhập tọa độ, bấm Áp dụng bên dưới các ô.
+
+20
+00:01:27,813 --> 00:01:30,237
+Kiểm tra lại hộp trên ảnh.
+
+21
+00:01:30,605 --> 00:01:34,805
+Nếu thao tác sai, dùng nút Hoàn tác ở thanh công cụ.
+
+22
+00:01:35,155 --> 00:01:40,387
+Sau khi kiểm toàn bộ hộp và bổ sung vật thể bỏ sót, bấm Đánh dấu đã kiểm.
+
+23
+00:01:40,739 --> 00:01:44,675
+Trong cảnh minh họa, bộ đếm đã tăng thành một ảnh.
+
+24
+00:01:45,031 --> 00:01:48,823
+Bấm Xuất ảnh này, CVAT XML.
+
+25
+00:01:49,173 --> 00:01:52,173
+Thông báo xác nhận một ảnh và chín hộp.
+
+26
+00:01:52,523 --> 00:01:59,387
+Khi nhập vào CVAT, chọn CVAT for images một chấm một, với tên ảnh và nhãn khớp task.
+
+27
+00:01:59,737 --> 00:02:03,985
+Trang Kết quả thực nghiệm so sánh các runtime Python CPU.
+
+28
+00:02:04,335 --> 00:02:09,183
+Phép đo dùng bốn threads, hai mươi sáu ảnh và ba lượt đo sau warmup.
+
+29
+00:02:09,544 --> 00:02:14,128
+INT tám đạt mean latency ba mươi tám phẩy tám mili giây.
+
+30
+00:02:14,478 --> 00:02:19,326
+Tỷ số latency nhanh hơn PyTorch ba phẩy chín sáu lần trong phép đo này.
+
+31
+00:02:19,687 --> 00:02:24,895
+Dung lượng artifact INT tám là mười một phẩy hai bốn MiB, không phải RAM.
+
+32
+00:02:25,245 --> 00:02:31,197
+INT tám ghép được chín mươi bốn trên chín mươi bảy hộp PyTorch tại IoU từ không phẩy năm.
+
+33
+00:02:31,547 --> 00:02:34,307
+Đây là độ đồng thuận giữa model.
+
+34
+00:02:34,672 --> 00:02:37,984
+Dự án chưa có mAP trên ground truth độc lập.
+
+35
+00:02:38,339 --> 00:02:43,139
+Bạn có thể dùng thử Studio và xem dữ liệu gốc trên trang kết quả.
+
+36
+00:02:43,506 --> 00:02:48,738
+Bước tiếp theo là đo mAP thật, RAM đỉnh và thời gian kiểm sửa nhãn của người dùng.
