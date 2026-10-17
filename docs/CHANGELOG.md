@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased - Demo Day materials, 2026-10-18
+
+### Added
+
+- Seven-slide PDF and editable PPTX with PTQ pipeline, CPU benchmark conditions, public/local runtime boundaries and unmeasured BDD100K quality metrics.
+
 ## Unreleased — 2026-10-16 repair
 
 - Clarified public browser versus native laptop runtimes, prioritized live local INT8, added all-runtime live demo scenes and reviewed M38 scope against the supplied brief.
