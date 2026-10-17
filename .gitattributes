@@ -5,3 +5,6 @@ docs/vendor/*.js text eol=lf
 docs/vendor/*.mjs text eol=lf
 *.onnx binary
 *.wasm binary
+
+*.pdf binary
+*.pptx binary
