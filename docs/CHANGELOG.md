@@ -4,6 +4,8 @@
 
 ### Changed
 
+- Shortened the demo to 2:30 and simplified on-screen captions to product actions, removing repetitive production commentary.
+
 - Replaced the main video preview with a genuine 1080p screencast, Vietnamese burned-in captions and separate SRT/timecodes; no narration or music. Retained raw footage and cut decisions locally.
 
 ### Added
