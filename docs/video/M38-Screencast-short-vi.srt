@@ -1,6 +1,6 @@
 1
 00:00:00,000 --> 00:00:05,000
-M38: tạo nhãn gợi ý ngay trên laptop.
+M38 — Pre-labeling for Edge Devices
 
 2
 00:00:05,000 --> 00:00:15,000

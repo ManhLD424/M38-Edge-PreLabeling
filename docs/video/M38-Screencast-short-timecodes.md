@@ -4,7 +4,7 @@ Footage thật; chỉ cắt khoảng chờ, không giả lập chuột/UI. Khôn
 
 | Bắt đầu | Kết thúc | Phụ đề |
 |---|---|---|
-| 00:00:00,000 | 00:00:05,000 | M38: tạo nhãn gợi ý ngay trên laptop.  |
+| 00:00:00,000 | 00:00:05,000 | M38 — Pre-labeling for Edge Devices  |
 | 00:00:05,000 | 00:00:15,000 | Cùng một ảnh, chạy lần lượt bốn runtime CPU.  |
 | 00:00:15,000 | 00:00:25,000 | PyTorch — Chạy Prelabel  |
 | 00:00:25,000 | 00:00:30,500 | ONNX Runtime  |
